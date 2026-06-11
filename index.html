@@ -146,6 +146,32 @@
     text-transform:uppercase;margin-top:4px;
   }
 
+  /* gif demo card */
+  .gif-card{
+    flex:1;min-height:0;
+    display:flex;align-items:center;justify-content:center;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:10px;
+    margin:0 6px;
+    overflow:hidden;
+  }
+  .gif-card img{
+    max-width:100%;max-height:100%;
+    object-fit:contain;border-radius:10px;
+  }
+  .view-toggle{
+    font-family:'Barlow Condensed';font-weight:700;
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    background:none;color:var(--dim);
+    border:1px solid var(--line);border-radius:999px;
+    padding:4px 12px;cursor:pointer;
+    transition:color .2s,border-color .2s;
+  }
+  .view-toggle:hover{color:var(--ember);border-color:var(--ember)}
+  .view-toggle:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
   /* muscle plates */
   .m{
     fill:var(--plate);
@@ -231,6 +257,76 @@
   }
   .ex.active .tag{color:var(--ember);border-color:var(--ember)}
 
+  /* ---------- edit mode ---------- */
+  .edit-btn{
+    margin-left:auto;
+    font-family:'Barlow Condensed';font-weight:700;
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    background:none;color:var(--dim);
+    border:1px solid var(--line);border-radius:999px;
+    padding:5px 13px;cursor:pointer;
+    transition:color .2s,border-color .2s,background .2s;
+  }
+  .edit-btn:hover{color:var(--ember);border-color:var(--ember)}
+  .edit-btn.on{background:var(--ember);border-color:var(--ember);color:#0e1013}
+  .edit-btn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+  .ex.editing{grid-template-columns:46px 1fr auto 34px;cursor:default}
+  .ex.editing:hover{border-color:var(--line)}
+  .rm{
+    width:30px;height:30px;border-radius:999px;
+    background:none;border:1px solid var(--line);
+    color:var(--dim);font-size:17px;line-height:1;
+    cursor:pointer;display:grid;place-items:center;
+    transition:color .2s,border-color .2s;
+  }
+  .rm:hover{color:var(--ember);border-color:var(--ember)}
+  .rm:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+  .empty{
+    border:1px dashed var(--line);border-radius:12px;
+    padding:26px 16px;text-align:center;color:var(--dim);
+    font-size:13px;
+  }
+  .editor{
+    margin-top:16px;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px;
+  }
+  .ed-grid{display:grid;grid-template-columns:1fr 200px;gap:8px}
+  .editor input,.editor select{
+    background:var(--bg);
+    border:1px solid var(--line);
+    color:var(--bone);
+    border-radius:9px;
+    padding:11px 12px;
+    font-family:'Inter';font-size:14px;
+    width:100%;
+  }
+  .editor input:focus,.editor select:focus{
+    outline:none;border-color:var(--ember);
+  }
+  .ed-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .ed-actions button{
+    font-family:'Barlow Condensed';font-weight:700;
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    border-radius:999px;padding:9px 16px;cursor:pointer;
+    border:1px solid var(--line);background:none;color:var(--bone);
+    transition:color .2s,border-color .2s,background .2s;
+  }
+  .ed-add{background:var(--ember)!important;border-color:var(--ember)!important;color:#0e1013!important}
+  .ed-add:hover{background:var(--ember-soft)!important}
+  .ed-reset:hover{color:var(--ember);border-color:var(--ember)}
+  .ed-done:hover{color:var(--ember);border-color:var(--ember)}
+  .ed-actions button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+  .ed-hint{
+    margin-top:10px;color:var(--dim);font-size:11.5px;line-height:1.5;
+  }
+  .ed-hint span{color:var(--bone);font-family:ui-monospace,monospace;font-size:11px}
+  @media (max-width:560px){
+    .ed-grid{grid-template-columns:1fr}
+  }
+
   /* ---------- transport bar ---------- */
   .transport{
     position:fixed;left:0;right:0;bottom:0;z-index:40;
@@ -309,10 +405,14 @@
 <main>
   <section class="anatomy" aria-label="Muscle map">
     <div class="anatomy-head">
-      <span class="label">Muscle Map</span>
+      <span class="label">Demo</span>
+      <button class="view-toggle" id="viewToggle" hidden>Map</button>
       <span id="focusName">—</span>
     </div>
-    <div class="figures">
+    <div class="gif-card" id="gifCard" hidden>
+      <img id="gifImg" alt="Exercise demonstration" decoding="async">
+    </div>
+    <div class="figures" id="figures">
       <div class="fig">
         <svg id="figFront" viewBox="0 0 220 470" role="img" aria-label="Front anatomy figure">
           <defs>
@@ -393,7 +493,20 @@
         <span><b id="exCount"></b>Exercises</span>
         <span><b id="dayTag"></b>Focus</span>
         <span><b id="dayDow"></b></span>
+        <button class="edit-btn" id="editBtn" aria-pressed="false">✎ Edit</button>
       </div>
+    </div>
+    <div class="editor" id="editor" hidden>
+      <div class="ed-grid">
+        <input id="edName" type="text" placeholder="Exercise name (e.g. Pec Deck Fly)" maxlength="60" autocomplete="off">
+        <select id="edMuscle" aria-label="Target muscle"></select>
+      </div>
+      <div class="ed-actions">
+        <button class="ed-add" id="edAdd">＋ Add exercise</button>
+        <button class="ed-reset" id="edReset">Reset day to default</button>
+        <button class="ed-done" id="edDone">Done</button>
+      </div>
+      <p class="ed-hint">New exercises highlight their muscle on the map. Add a GIF later by saving <span id="edSlugHint">gifs/&lt;name&gt;.gif</span></p>
     </div>
     <div class="ex-list" id="exList" role="list"></div>
   </section>
@@ -415,78 +528,115 @@
 /* muscle keys: upperChest midChest lowerChest frontDelt sideDelt rearDelt
    biceps forearm triceps traps upperBack lats lowerBack
    quads hams glutes calves */
-const DAYS = [
+const DEFAULT_DAYS = [
   {
     id:"pushA", day:"Mon", short:"Push A", title:"Push A", focus:"Chest",
     exercises:[
-      {n:"DB Chest Press", tag:"Mid Chest", m:["midChest"]},
-      {n:"Incline Barbell Press", tag:"Upper Chest", m:["upperChest"]},
-      {n:"Machine Shoulder Press", tag:"Shoulders", m:["frontDelt","sideDelt"]},
-      {n:"Seated Cable Fly", tag:"Mid Chest", m:["midChest"]},
-      {n:"Cable Lateral Raise", tag:"Side Delt", m:["sideDelt"]},
-      {n:"High-to-Low Cable Fly", tag:"Lower Chest", m:["lowerChest"]},
-      {n:"Cable Front Raise (Behind → Forward)", tag:"Front Delt", m:["frontDelt"]},
-      {n:"Straight Bar Cable Pushdown", tag:"Triceps", m:["triceps"]},
-      {n:"Cable Rope Overhead Extension", tag:"Triceps", m:["triceps"]}
+      {n:"DB Chest Press", tag:"Mid Chest", m:["midChest"], g:"db-chest-press"},
+      {n:"Incline Barbell Press", tag:"Upper Chest", m:["upperChest"], g:"incline-barbell-press"},
+      {n:"Machine Shoulder Press", tag:"Shoulders", m:["frontDelt","sideDelt"], g:"machine-shoulder-press"},
+      {n:"Seated Cable Fly", tag:"Mid Chest", m:["midChest"], g:"seated-cable-fly"},
+      {n:"Cable Lateral Raise", tag:"Side Delt", m:["sideDelt"], g:"cable-lateral-raise"},
+      {n:"High-to-Low Cable Fly", tag:"Lower Chest", m:["lowerChest"], g:"high-to-low-cable-fly"},
+      {n:"Cable Front Raise (Behind → Forward)", tag:"Front Delt", m:["frontDelt"], g:"cable-front-raise"},
+      {n:"Straight Bar Cable Pushdown", tag:"Triceps", m:["triceps"], g:"straight-bar-pushdown"},
+      {n:"Cable Rope Overhead Extension", tag:"Triceps", m:["triceps"], g:"rope-overhead-extension"}
     ]
   },
   {
     id:"pullA", day:"Tue", short:"Pull A", title:"Pull A", focus:"Lats & Width",
     exercises:[
-      {n:"Lat Pulldown", tag:"Lats", m:["lats"]},
-      {n:"Machine Row", tag:"Upper Back", m:["upperBack"]},
-      {n:"Wide Grip Cable Row", tag:"Upper Back", m:["upperBack"]},
-      {n:"Cable Lats Pullover", tag:"Lats", m:["lats"]},
-      {n:"DB Shrugs", tag:"Traps", m:["traps"]},
-      {n:"DB Preacher Curl", tag:"Bicep · Short Head", m:["biceps"]},
-      {n:"Bayesian Curl", tag:"Bicep · Long Head", m:["biceps"]},
-      {n:"Rope Hammer Curl", tag:"Brachialis", m:["forearm","biceps"]}
+      {n:"Lat Pulldown", tag:"Lats", m:["lats"], g:"lat-pulldown"},
+      {n:"Machine Row", tag:"Upper Back", m:["upperBack"], g:"machine-row"},
+      {n:"Wide Grip Cable Row", tag:"Upper Back", m:["upperBack"], g:"wide-grip-cable-row"},
+      {n:"Cable Lats Pullover", tag:"Lats", m:["lats"], g:"cable-lats-pullover"},
+      {n:"DB Shrugs", tag:"Traps", m:["traps"], g:"db-shrugs"},
+      {n:"DB Preacher Curl", tag:"Bicep · Short Head", m:["biceps"], g:"db-preacher-curl"},
+      {n:"Bayesian Curl", tag:"Bicep · Long Head", m:["biceps"], g:"bayesian-curl"},
+      {n:"Rope Hammer Curl", tag:"Brachialis", m:["forearm","biceps"], g:"rope-hammer-curl"}
     ]
   },
   {
     id:"legs", day:"Wed", short:"Legs", title:"Legs", focus:"Full Lower",
     exercises:[
-      {n:"Squats", tag:"Quads · Glutes", m:["quads","glutes"]},
-      {n:"Leg Press", tag:"Quads", m:["quads"]},
-      {n:"Stiff Leg Deadlift", tag:"Hamstrings", m:["hams","glutes"]},
-      {n:"Hip Thrust", tag:"Glutes", m:["glutes"]},
-      {n:"Leg Curl", tag:"Hamstrings", m:["hams"]},
-      {n:"Leg Extension", tag:"Quads", m:["quads"]}
+      {n:"Squats", tag:"Quads · Glutes", m:["quads","glutes"], g:"squats"},
+      {n:"Leg Press", tag:"Quads", m:["quads"], g:"leg-press"},
+      {n:"Stiff Leg Deadlift", tag:"Hamstrings", m:["hams","glutes"], g:"stiff-leg-deadlift"},
+      {n:"Hip Thrust", tag:"Glutes", m:["glutes"], g:"hip-thrust"},
+      {n:"Leg Curl", tag:"Hamstrings", m:["hams"], g:"leg-curl"},
+      {n:"Leg Extension", tag:"Quads", m:["quads"], g:"leg-extension"}
     ]
   },
   {
     id:"pushB", day:"Thu", short:"Push B", title:"Push B", focus:"Shoulders",
     exercises:[
-      {n:"Seated DB Shoulder Press", tag:"Shoulders", m:["frontDelt","sideDelt"]},
-      {n:"Machine Chest Press", tag:"Mid Chest", m:["midChest"]},
-      {n:"Supported DB Lateral Raise", tag:"Side Delt", m:["sideDelt"]},
-      {n:"Incline Upper Chest Cable Fly", tag:"Upper Chest", m:["upperChest"]},
-      {n:"Angled Side Lateral DB Raise", tag:"Side Delt", m:["sideDelt"]},
-      {n:"Lower Chest Fly", tag:"Lower Chest", m:["lowerChest"]},
-      {n:"Cable Rear Reverse Fly", tag:"Rear Delt", m:["rearDelt"]},
-      {n:"Supported EZ Bar Pushdown", tag:"Triceps", m:["triceps"]},
-      {n:"Barbell Supported Skull Crusher", tag:"Triceps", m:["triceps"]},
-      {n:"Single Arm Cable Pushdown", tag:"Triceps", m:["triceps"]}
+      {n:"Seated DB Shoulder Press", tag:"Shoulders", m:["frontDelt","sideDelt"], g:"seated-db-shoulder-press"},
+      {n:"Machine Chest Press", tag:"Mid Chest", m:["midChest"], g:"machine-chest-press"},
+      {n:"Supported DB Lateral Raise", tag:"Side Delt", m:["sideDelt"], g:"supported-db-lateral-raise"},
+      {n:"Incline Upper Chest Cable Fly", tag:"Upper Chest", m:["upperChest"], g:"incline-cable-fly"},
+      {n:"Angled Side Lateral DB Raise", tag:"Side Delt", m:["sideDelt"], g:"angled-lateral-raise"},
+      {n:"Lower Chest Fly", tag:"Lower Chest", m:["lowerChest"], g:"lower-chest-fly"},
+      {n:"Cable Rear Reverse Fly", tag:"Rear Delt", m:["rearDelt"], g:"cable-rear-fly"},
+      {n:"Supported EZ Bar Pushdown", tag:"Triceps", m:["triceps"], g:"ez-bar-pushdown"},
+      {n:"Barbell Supported Skull Crusher", tag:"Triceps", m:["triceps"], g:"skull-crusher"},
+      {n:"Single Arm Cable Pushdown", tag:"Triceps", m:["triceps"], g:"single-arm-pushdown"}
     ]
   },
   {
     id:"pullB", day:"Fri", short:"Pull B", title:"Pull B", focus:"Thickness & Rows",
     exercises:[
-      {n:"Supported Smith Machine Row", tag:"Upper Back", m:["upperBack"]},
-      {n:"Single Arm Seated Pulldown", tag:"Upper Back", m:["upperBack","lats"]},
-      {n:"Close Grip Cable Row", tag:"Lower Back", m:["lowerBack","lats"]},
-      {n:"Close Grip T-Bar Row", tag:"Mid Back", m:["upperBack","lats"]},
-      {n:"Reverse Close Grip Cable Row", tag:"Lower Back", m:["lowerBack","lats"]},
-      {n:"Cable Bar Raise (From Behind)", tag:"Bicep · Short Head", m:["biceps"]},
-      {n:"Incline DB Curl", tag:"Bicep · Long Head", m:["biceps"]},
-      {n:"Single Arm Cable Hammer Curl", tag:"Brachialis", m:["forearm","biceps"]}
+      {n:"Supported Smith Machine Row", tag:"Upper Back", m:["upperBack"], g:"smith-machine-row"},
+      {n:"Single Arm Seated Pulldown", tag:"Upper Back", m:["upperBack","lats"], g:"single-arm-pulldown"},
+      {n:"Close Grip Cable Row", tag:"Lower Back", m:["lowerBack","lats"], g:"close-grip-cable-row"},
+      {n:"Close Grip T-Bar Row", tag:"Mid Back", m:["upperBack","lats"], g:"t-bar-row"},
+      {n:"Reverse Close Grip Cable Row", tag:"Lower Back", m:["lowerBack","lats"], g:"reverse-close-grip-row"},
+      {n:"Cable Bar Raise (From Behind)", tag:"Bicep · Short Head", m:["biceps"], g:"cable-bar-raise-behind"},
+      {n:"Incline DB Curl", tag:"Bicep · Long Head", m:["biceps"], g:"incline-db-curl"},
+      {n:"Single Arm Cable Hammer Curl", tag:"Brachialis", m:["forearm","biceps"], g:"single-arm-hammer-curl"}
     ]
   }
 ];
 
+/* ------------ on-device customisation ------------ */
+const STORE_KEY = 'ppl-custom-v1';
+const MUSCLES = {
+  upperChest:'Upper Chest', midChest:'Mid Chest', lowerChest:'Lower Chest',
+  frontDelt:'Front Delt', sideDelt:'Side Delt', rearDelt:'Rear Delt',
+  biceps:'Biceps', forearm:'Brachialis / Forearm', triceps:'Triceps',
+  traps:'Traps', upperBack:'Upper Back', lats:'Lats', lowerBack:'Lower Back',
+  quads:'Quads', hams:'Hamstrings', glutes:'Glutes', calves:'Calves'
+};
+function cloneDefaults(){
+  return DEFAULT_DAYS.map(d => ({...d, exercises: d.exercises.map(e => ({...e, m:[...e.m]}))}));
+}
+function loadCustom(){
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+  catch(e){ return {}; }
+}
+let custom = loadCustom();
+const DAYS = cloneDefaults();
+DAYS.forEach(d => { if (Array.isArray(custom[d.id])) d.exercises = custom[d.id]; });
+
+function persistDay(){
+  custom[DAYS[dayIdx].id] = DAYS[dayIdx].exercises;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(custom)); } catch(e){}
+}
+function resetDay(){
+  const d = DAYS[dayIdx];
+  delete custom[d.id];
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(custom)); } catch(e){}
+  d.exercises = cloneDefaults().find(x => x.id === d.id).exercises;
+  setDay(dayIdx);
+  editMode = true; enterEditUI();
+}
+function slugify(s){
+  return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40) || 'exercise';
+}
+
 /* ------------ state ------------ */
-let dayIdx = 0, exIdx = 0, playing = false, timer = null;
-const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let dayIdx = 0, exIdx = 0, playing = false, timer = null, editMode = false;
+const reduceMotion = typeof matchMedia === 'function'
+  ? matchMedia('(prefers-reduced-motion: reduce)').matches : false;
 
 /* ------------ dom ------------ */
 const tabsEl = document.getElementById('dayTabs');
@@ -498,6 +648,42 @@ const countEl = document.getElementById('exCount');
 const focusEl = document.getElementById('focusName');
 const tCount = document.getElementById('tCount');
 const playBtn = document.getElementById('playBtn');
+const gifCard = document.getElementById('gifCard');
+const gifImg = document.getElementById('gifImg');
+const figuresEl = document.getElementById('figures');
+const viewToggle = document.getElementById('viewToggle');
+
+/* ------------ gif demo with map fallback ------------ */
+let viewPref = 'gif';      /* user's preferred view when a gif exists */
+let gifAvailable = false;
+let loadToken = 0;
+
+function applyView(){
+  const showGif = gifAvailable && viewPref === 'gif';
+  gifCard.hidden = !showGif;
+  figuresEl.style.display = showGif ? 'none' : 'flex';
+  viewToggle.hidden = !gifAvailable;
+  viewToggle.textContent = showGif ? 'Map' : 'GIF';
+}
+viewToggle.addEventListener('click', ()=>{
+  viewPref = viewPref === 'gif' ? 'map' : 'gif';
+  applyView();
+});
+function loadMedia(ex){
+  const token = ++loadToken;
+  gifAvailable = false;
+  applyView();
+  if(!ex.g) return;
+  const probe = new Image();
+  probe.onload = ()=>{
+    if(token !== loadToken) return;
+    gifImg.src = probe.src;
+    gifAvailable = true;
+    applyView();
+  };
+  probe.onerror = ()=>{ if(token === loadToken){ gifAvailable = false; applyView(); } };
+  probe.src = 'gifs/' + ex.g + '.gif';
+}
 
 /* ------------ tabs ------------ */
 DAYS.forEach((d,i)=>{
@@ -520,23 +706,68 @@ function setDay(i){
     : `<span class="focus">${d.title}</span>`;
   tagEl.textContent = d.focus;
   dowEl.textContent = ({Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday'})[d.day];
+  renderList();
+  if(d.exercises.length) setExercise(Math.min(exIdx, d.exercises.length-1), false);
+  else clearStage();
+}
+
+function esc(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderList(){
+  const d = DAYS[dayIdx];
   countEl.textContent = d.exercises.length;
   listEl.innerHTML = '';
+  if(!d.exercises.length){
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.textContent = 'No exercises in this day. Tap Edit to add one.';
+    listEl.appendChild(empty);
+  }
   d.exercises.forEach((ex,k)=>{
-    const row = document.createElement('button');
-    row.className = 'ex'; row.setAttribute('role','listitem');
-    row.innerHTML = `<span class="num">${String(k+1).padStart(2,'0')}</span>
-      <span class="name">${ex.n}</span>
-      <span class="tag">${ex.tag}</span>`;
-    row.addEventListener('click', ()=>{ stopPlay(); setExercise(k); });
-    listEl.appendChild(row);
+    if(editMode){
+      const row = document.createElement('div');
+      row.className = 'ex editing';
+      row.innerHTML = `<span class="num">${String(k+1).padStart(2,'0')}</span>
+        <span class="name">${esc(ex.n)}</span>
+        <span class="tag">${esc(ex.tag)}</span>`;
+      const rm = document.createElement('button');
+      rm.className = 'rm';
+      rm.setAttribute('aria-label', `Remove ${ex.n}`);
+      rm.textContent = '×';
+      rm.addEventListener('click', ()=>{
+        d.exercises.splice(k,1);
+        persistDay();
+        renderList();
+      });
+      row.appendChild(rm);
+      listEl.appendChild(row);
+    } else {
+      const row = document.createElement('button');
+      row.className = 'ex'; row.setAttribute('role','listitem');
+      row.innerHTML = `<span class="num">${String(k+1).padStart(2,'0')}</span>
+        <span class="name">${esc(ex.n)}</span>
+        <span class="tag">${esc(ex.tag)}</span>`;
+      row.addEventListener('click', ()=>{ stopPlay(); setExercise(k); });
+      listEl.appendChild(row);
+    }
   });
-  setExercise(0, false);
+}
+
+function clearStage(){
+  document.querySelectorAll('.m[data-m]').forEach(p=>p.classList.remove('lit','lit-soft'));
+  focusEl.textContent = '—';
+  tCount.textContent = '0 / 0';
+  gifAvailable = false; applyView();
 }
 
 function setExercise(k, scroll=true){
+  const d = DAYS[dayIdx];
+  if(!d.exercises.length){ clearStage(); return; }
+  k = Math.max(0, Math.min(k, d.exercises.length-1));
   exIdx = k;
-  const d = DAYS[dayIdx], ex = d.exercises[k];
+  const ex = d.exercises[k];
   [...listEl.children].forEach((r,i)=>r.classList.toggle('active', i===k));
   /* day muscles glow soft, current exercise muscles ignite */
   const dayMuscles = new Set(d.exercises.flatMap(e=>e.m));
@@ -547,6 +778,7 @@ function setExercise(k, scroll=true){
     p.classList.toggle('lit-soft', !active.has(m) && dayMuscles.has(m));
   });
   focusEl.textContent = ex.tag;
+  loadMedia(ex);
   tCount.textContent = `${k+1} / ${d.exercises.length}`;
   if(scroll){
     const row = listEl.children[k];
@@ -557,6 +789,7 @@ function setExercise(k, scroll=true){
 /* ------------ transport ------------ */
 function step(dir){
   const len = DAYS[dayIdx].exercises.length;
+  if(!len) return;
   setExercise((exIdx + dir + len) % len);
 }
 document.getElementById('prevBtn').addEventListener('click', ()=>{ stopPlay(); step(-1); });
@@ -578,6 +811,7 @@ function stopPlay(){
 
 /* keyboard */
 document.addEventListener('keydown', e=>{
+  if(e.target.matches('input,select,textarea')) return;
   if(e.key==='ArrowRight'){ stopPlay(); step(1); }
   if(e.key==='ArrowLeft'){ stopPlay(); step(-1); }
   if(e.key==='ArrowDown'){ e.preventDefault(); setDay((dayIdx+1)%DAYS.length); }
@@ -585,6 +819,63 @@ document.addEventListener('keydown', e=>{
 });
 
 setDay(0);
+
+/* ------------ edit mode wiring ------------ */
+const editBtn = document.getElementById('editBtn');
+const editorEl = document.getElementById('editor');
+const edName = document.getElementById('edName');
+const edMuscle = document.getElementById('edMuscle');
+const edSlugHint = document.getElementById('edSlugHint');
+
+Object.entries(MUSCLES).forEach(([key,label])=>{
+  const o = document.createElement('option');
+  o.value = key; o.textContent = label;
+  edMuscle.appendChild(o);
+});
+
+function enterEditUI(){
+  editBtn.classList.toggle('on', editMode);
+  editBtn.setAttribute('aria-pressed', String(editMode));
+  editBtn.textContent = editMode ? '✓ Done' : '✎ Edit';
+  editorEl.hidden = !editMode;
+  renderList();
+  if(!editMode){
+    const len = DAYS[dayIdx].exercises.length;
+    len ? setExercise(Math.min(exIdx, len-1), false) : clearStage();
+  }
+}
+editBtn.addEventListener('click', ()=>{
+  stopPlay();
+  editMode = !editMode;
+  enterEditUI();
+  if(editMode) edName.focus();
+});
+document.getElementById('edDone').addEventListener('click', ()=>{
+  editMode = false; enterEditUI();
+});
+document.getElementById('edReset').addEventListener('click', ()=>{
+  if(confirm('Reset this day to the original program?')) resetDay();
+});
+edName.addEventListener('input', ()=>{
+  edSlugHint.textContent = 'gifs/' + slugify(edName.value || '<name>') + '.gif';
+});
+function addExercise(){
+  const name = edName.value.trim();
+  if(!name){ edName.focus(); return; }
+  const mKey = edMuscle.value;
+  DAYS[dayIdx].exercises.push({
+    n: name,
+    tag: MUSCLES[mKey],
+    m: [mKey],
+    g: slugify(name)
+  });
+  persistDay();
+  edName.value = '';
+  edSlugHint.textContent = 'gifs/<name>.gif';
+  renderList();
+}
+document.getElementById('edAdd').addEventListener('click', addExercise);
+edName.addEventListener('keydown', e=>{ if(e.key==='Enter') addExercise(); });
 
 /* PWA: offline support */
 if ('serviceWorker' in navigator) {
