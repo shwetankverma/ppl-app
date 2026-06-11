@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>The Split — 5-Day PPL A·B</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0e1013">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Split">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1013;
+    --panel:#15191f;
+    --panel-2:#181d24;
+    --line:#232a33;
+    --bone:#ece7dd;
+    --dim:#8b94a1;
+    --plate:#262d37;
+    --plate-edge:#11151a;
+    --ember:#ff4d2e;
+    --ember-soft:#ff6a3d;
+    --ember-dim:rgba(255,77,46,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--bone);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--ember);color:#0e1013}
+
+  /* ---------- header ---------- */
+  header{
+    padding:26px 22px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  .kicker{
+    font-family:'Barlow Condensed';
+    font-weight:600;letter-spacing:.32em;
+    font-size:11px;color:var(--ember);
+    text-transform:uppercase;
+  }
+  h1{
+    font-family:'Anton';
+    font-size:clamp(34px,7vw,58px);
+    letter-spacing:.01em;
+    line-height:1;
+    margin-top:6px;
+    text-transform:uppercase;
+  }
+  h1 .thin{color:var(--dim)}
+  .sub{
+    margin-top:8px;color:var(--dim);
+    font-size:13px;max-width:520px;line-height:1.5;
+  }
+
+  /* ---------- day tabs ---------- */
+  nav.days{
+    display:flex;gap:8px;
+    padding:14px 22px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:var(--bg);z-index:30;
+  }
+  nav.days::-webkit-scrollbar{display:none}
+  .day-tab{
+    flex:0 0 auto;
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--dim);
+    border-radius:10px;
+    padding:8px 14px 9px;
+    cursor:pointer;
+    font-family:'Barlow Condensed';
+    text-align:left;
+    transition:border-color .2s,color .2s,background .2s;
+  }
+  .day-tab .d{
+    display:block;font-size:10px;font-weight:600;
+    letter-spacing:.22em;text-transform:uppercase;
+  }
+  .day-tab .n{
+    display:block;font-size:17px;font-weight:700;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--bone);
+    margin-top:1px;
+  }
+  .day-tab.active{
+    background:var(--ember-dim);
+    border-color:var(--ember);
+    color:var(--ember);
+  }
+  .day-tab.active .n{color:var(--ember)}
+  .day-tab:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+  /* ---------- layout ---------- */
+  main{
+    display:grid;
+    grid-template-columns:minmax(320px,460px) 1fr;
+    gap:0;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  /* anatomy panel */
+  .anatomy{
+    border-right:1px solid var(--line);
+    padding:22px 16px 10px;
+    position:sticky;top:64px;
+    align-self:start;
+    height:calc(100vh - 64px);
+    display:flex;flex-direction:column;
+  }
+  .anatomy-head{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:0 6px 10px;
+  }
+  .anatomy-head .label{
+    font-family:'Barlow Condensed';font-weight:600;
+    letter-spacing:.26em;font-size:11px;color:var(--dim);
+    text-transform:uppercase;
+  }
+  #focusName{
+    font-family:'Anton';font-size:18px;letter-spacing:.03em;
+    color:var(--ember);text-transform:uppercase;
+    text-align:right;
+  }
+  .figures{
+    flex:1;display:flex;gap:6px;min-height:0;
+    align-items:center;justify-content:center;
+  }
+  .fig{flex:1;max-width:230px;min-width:0}
+  .fig svg{width:100%;height:auto;display:block}
+  .fig-cap{
+    text-align:center;font-family:'Barlow Condensed';
+    font-size:11px;letter-spacing:.3em;color:var(--dim);
+    text-transform:uppercase;margin-top:4px;
+  }
+
+  /* muscle plates */
+  .m{
+    fill:var(--plate);
+    stroke:var(--plate-edge);
+    stroke-width:1.4;
+    stroke-linejoin:round;
+    transition:fill .35s;
+  }
+  .m.lit{
+    fill:var(--ember);
+    filter:url(#glow);
+    animation:breathe 1.6s ease-in-out infinite;
+  }
+  .m.lit-soft{
+    fill:#b2402c;
+  }
+  @keyframes breathe{
+    0%,100%{fill:var(--ember)}
+    50%{fill:var(--ember-soft)}
+  }
+  .outline{
+    fill:none;stroke:#39424e;stroke-width:1.1;opacity:.55;
+  }
+  .skin{fill:#1b2027}
+
+  /* ---------- session panel ---------- */
+  .session{padding:22px 22px 110px;min-width:0}
+  .session-head h2{
+    font-family:'Anton';
+    font-size:clamp(26px,4.4vw,40px);
+    text-transform:uppercase;letter-spacing:.015em;
+    line-height:1.05;
+  }
+  .session-head .focus{
+    color:var(--ember);
+  }
+  .meta{
+    display:flex;gap:14px;margin-top:8px;
+    font-family:'Barlow Condensed';font-size:12px;font-weight:600;
+    letter-spacing:.18em;color:var(--dim);text-transform:uppercase;
+  }
+  .meta b{color:var(--bone);font-weight:700;margin-right:4px}
+
+  .ex-list{margin-top:18px;display:flex;flex-direction:column;gap:8px}
+  .ex{
+    display:grid;
+    grid-template-columns:46px 1fr auto;
+    align-items:center;gap:12px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:3px solid transparent;
+    border-radius:12px;
+    padding:13px 16px 13px 12px;
+    cursor:pointer;
+    text-align:left;width:100%;
+    color:var(--bone);
+    transition:border-color .2s,background .2s,transform .15s;
+  }
+  .ex:hover{border-color:#36404d}
+  .ex:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+  .ex.active{
+    background:var(--panel-2);
+    border-color:var(--line);
+    border-left-color:var(--ember);
+    transform:translateX(2px);
+  }
+  .ex .num{
+    font-family:'Anton';font-size:21px;color:#3c4654;
+    text-align:center;line-height:1;
+  }
+  .ex.active .num{color:var(--ember)}
+  .ex .name{
+    font-family:'Barlow Condensed';font-weight:600;
+    font-size:18px;letter-spacing:.02em;line-height:1.15;
+  }
+  .ex .tag{
+    font-family:'Barlow Condensed';font-weight:600;
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--dim);
+    border:1px solid var(--line);
+    padding:4px 9px;border-radius:999px;
+    white-space:nowrap;
+  }
+  .ex.active .tag{color:var(--ember);border-color:var(--ember)}
+
+  /* ---------- transport bar ---------- */
+  .transport{
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    display:flex;justify-content:center;
+    padding:14px 16px calc(18px + env(safe-area-inset-bottom));
+    background:linear-gradient(to top,var(--bg) 55%,transparent);
+    pointer-events:none;
+  }
+  .transport .inner{
+    pointer-events:auto;
+    display:flex;align-items:center;gap:10px;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:8px 10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+  }
+  .tbtn{
+    background:none;border:1px solid var(--line);
+    color:var(--bone);border-radius:999px;
+    width:40px;height:40px;cursor:pointer;
+    font-size:16px;line-height:1;
+    display:grid;place-items:center;
+    transition:border-color .2s,color .2s;
+  }
+  .tbtn:hover{border-color:var(--ember);color:var(--ember)}
+  .tbtn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+  .tbtn.play{
+    width:auto;padding:0 18px;
+    font-family:'Barlow Condensed';font-weight:700;
+    letter-spacing:.2em;font-size:12px;text-transform:uppercase;
+  }
+  .tbtn.play.on{background:var(--ember);border-color:var(--ember);color:#0e1013}
+  .tcount{
+    font-family:'Barlow Condensed';font-weight:600;
+    font-size:13px;letter-spacing:.14em;color:var(--dim);
+    min-width:54px;text-align:center;
+  }
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:18px 22px 26px;color:#525c6a;
+    font-size:11.5px;letter-spacing:.04em;
+    text-align:center;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:840px){
+    main{grid-template-columns:1fr}
+    .anatomy{
+      position:sticky;top:64px;height:auto;
+      border-right:none;border-bottom:1px solid var(--line);
+      background:var(--bg);z-index:20;
+      padding:12px 14px 6px;
+    }
+    .figures{max-height:280px}
+    .fig{max-width:170px}
+    .session{padding:18px 16px 120px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .m.lit{animation:none}
+    .ex,.ex.active{transition:none;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">High-Volume Bodybuilding Program</div>
+  <h1>The Split <span class="thin">/ 5-Day PPL A·B</span></h1>
+  <p class="sub">Tap any exercise to ignite the muscle it targets. Hit play to walk through the session in order, set by set.</p>
+</header>
+
+<nav class="days" id="dayTabs" aria-label="Training days"></nav>
+
+<main>
+  <section class="anatomy" aria-label="Muscle map">
+    <div class="anatomy-head">
+      <span class="label">Muscle Map</span>
+      <span id="focusName">—</span>
+    </div>
+    <div class="figures">
+      <div class="fig">
+        <svg id="figFront" viewBox="0 0 220 470" role="img" aria-label="Front anatomy figure">
+          <defs>
+            <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="4" result="b"/>
+              <feMerge>
+                <feMergeNode in="b"/><feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <!-- head & faint frame -->
+          <ellipse class="skin" cx="110" cy="34" rx="17" ry="21"/>
+          <rect class="skin" x="101" y="52" width="18" height="16" rx="5"/>
+          <path class="outline" d="M70,470 M110,56"/>
+          <g id="frontHalf">
+            <!-- traps (front slope) -->
+            <polygon class="m" data-m="traps"      points="100,62 108,58 108,72 80,80"/>
+            <!-- delts -->
+            <polygon class="m" data-m="sideDelt"   points="52,88 66,78 72,98 58,110"/>
+            <polygon class="m" data-m="frontDelt"  points="68,80 86,82 80,102 73,97"/>
+            <!-- chest -->
+            <polygon class="m" data-m="upperChest" points="84,85 107,85 107,101 80,104"/>
+            <polygon class="m" data-m="midChest"   points="80,107 107,104 107,129 86,127"/>
+            <polygon class="m" data-m="lowerChest" points="87,130 107,132 103,141 91,137"/>
+            <!-- arm -->
+            <polygon class="m" data-m="biceps"     points="58,114 74,105 76,138 63,144"/>
+            <polygon class="m" data-m="forearm"    points="57,150 72,145 67,200 56,196"/>
+            <!-- abs (context, never lit) -->
+            <polygon class="m" points="93,144 107,144 107,162 95,162"/>
+            <polygon class="m" points="95,166 107,166 107,184 97,184"/>
+            <polygon class="m" points="97,188 107,188 107,205 99,204"/>
+            <!-- quads -->
+            <polygon class="m" data-m="quads"      points="86,218 106,212 105,262 90,266"/>
+            <polygon class="m" data-m="quads"      points="90,270 105,266 102,312 91,314"/>
+            <!-- shin -->
+            <polygon class="m" points="91,326 102,323 99,392 92,390"/>
+          </g>
+          <use href="#frontHalf" transform="translate(220,0) scale(-1,1)"/>
+        </svg>
+        <div class="fig-cap">Front</div>
+      </div>
+      <div class="fig">
+        <svg id="figBack" viewBox="0 0 220 470" role="img" aria-label="Back anatomy figure">
+          <ellipse class="skin" cx="110" cy="34" rx="17" ry="21"/>
+          <rect class="skin" x="101" y="52" width="18" height="16" rx="5"/>
+          <g id="backHalf">
+            <!-- traps diamond -->
+            <polygon class="m" data-m="traps"      points="108,58 88,72 97,110 108,122"/>
+            <!-- rear delt -->
+            <polygon class="m" data-m="rearDelt"   points="53,88 70,79 73,100 59,110"/>
+            <!-- upper back -->
+            <polygon class="m" data-m="upperBack"  points="74,102 95,110 93,126 75,120"/>
+            <!-- lats -->
+            <polygon class="m" data-m="lats"       points="75,124 95,128 106,128 106,170 85,162 75,140"/>
+            <!-- lower back erectors -->
+            <polygon class="m" data-m="lowerBack"  points="96,166 106,166 106,208 98,206"/>
+            <!-- arm back -->
+            <polygon class="m" data-m="triceps"    points="57,114 73,106 75,140 62,147"/>
+            <polygon class="m" data-m="forearm"    points="57,152 72,148 67,200 56,196"/>
+            <!-- glutes -->
+            <polygon class="m" data-m="glutes"     points="87,212 107,210 107,248 89,250"/>
+            <!-- hamstrings -->
+            <polygon class="m" data-m="hams"       points="90,256 106,254 103,320 92,318"/>
+            <!-- calves -->
+            <polygon class="m" data-m="calves"     points="92,328 102,326 101,384 93,386"/>
+          </g>
+          <use href="#backHalf" transform="translate(220,0) scale(-1,1)"/>
+        </svg>
+        <div class="fig-cap">Back</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="session">
+    <div class="session-head">
+      <h2 id="dayTitle"></h2>
+      <div class="meta">
+        <span><b id="exCount"></b>Exercises</span>
+        <span><b id="dayTag"></b>Focus</span>
+        <span><b id="dayDow"></b></span>
+      </div>
+    </div>
+    <div class="ex-list" id="exList" role="list"></div>
+  </section>
+</main>
+
+<div class="transport">
+  <div class="inner">
+    <button class="tbtn" id="prevBtn" aria-label="Previous exercise">‹</button>
+    <button class="tbtn play" id="playBtn" aria-pressed="false">Play</button>
+    <span class="tcount" id="tCount">1 / 9</span>
+    <button class="tbtn" id="nextBtn" aria-label="Next exercise">›</button>
+  </div>
+</div>
+
+<footer>Train hard, recover harder. Built for the 5-day PPL A·B rotation.</footer>
+
+<script>
+/* ------------ data ------------ */
+/* muscle keys: upperChest midChest lowerChest frontDelt sideDelt rearDelt
+   biceps forearm triceps traps upperBack lats lowerBack
+   quads hams glutes calves */
+const DAYS = [
+  {
+    id:"pushA", day:"Mon", short:"Push A", title:"Push A", focus:"Chest",
+    exercises:[
+      {n:"DB Chest Press", tag:"Mid Chest", m:["midChest"]},
+      {n:"Incline Barbell Press", tag:"Upper Chest", m:["upperChest"]},
+      {n:"Machine Shoulder Press", tag:"Shoulders", m:["frontDelt","sideDelt"]},
+      {n:"Seated Cable Fly", tag:"Mid Chest", m:["midChest"]},
+      {n:"Cable Lateral Raise", tag:"Side Delt", m:["sideDelt"]},
+      {n:"High-to-Low Cable Fly", tag:"Lower Chest", m:["lowerChest"]},
+      {n:"Cable Front Raise (Behind → Forward)", tag:"Front Delt", m:["frontDelt"]},
+      {n:"Straight Bar Cable Pushdown", tag:"Triceps", m:["triceps"]},
+      {n:"Cable Rope Overhead Extension", tag:"Triceps", m:["triceps"]}
+    ]
+  },
+  {
+    id:"pullA", day:"Tue", short:"Pull A", title:"Pull A", focus:"Lats & Width",
+    exercises:[
+      {n:"Lat Pulldown", tag:"Lats", m:["lats"]},
+      {n:"Machine Row", tag:"Upper Back", m:["upperBack"]},
+      {n:"Wide Grip Cable Row", tag:"Upper Back", m:["upperBack"]},
+      {n:"Cable Lats Pullover", tag:"Lats", m:["lats"]},
+      {n:"DB Shrugs", tag:"Traps", m:["traps"]},
+      {n:"DB Preacher Curl", tag:"Bicep · Short Head", m:["biceps"]},
+      {n:"Bayesian Curl", tag:"Bicep · Long Head", m:["biceps"]},
+      {n:"Rope Hammer Curl", tag:"Brachialis", m:["forearm","biceps"]}
+    ]
+  },
+  {
+    id:"legs", day:"Wed", short:"Legs", title:"Legs", focus:"Full Lower",
+    exercises:[
+      {n:"Squats", tag:"Quads · Glutes", m:["quads","glutes"]},
+      {n:"Leg Press", tag:"Quads", m:["quads"]},
+      {n:"Stiff Leg Deadlift", tag:"Hamstrings", m:["hams","glutes"]},
+      {n:"Hip Thrust", tag:"Glutes", m:["glutes"]},
+      {n:"Leg Curl", tag:"Hamstrings", m:["hams"]},
+      {n:"Leg Extension", tag:"Quads", m:["quads"]}
+    ]
+  },
+  {
+    id:"pushB", day:"Thu", short:"Push B", title:"Push B", focus:"Shoulders",
+    exercises:[
+      {n:"Seated DB Shoulder Press", tag:"Shoulders", m:["frontDelt","sideDelt"]},
+      {n:"Machine Chest Press", tag:"Mid Chest", m:["midChest"]},
+      {n:"Supported DB Lateral Raise", tag:"Side Delt", m:["sideDelt"]},
+      {n:"Incline Upper Chest Cable Fly", tag:"Upper Chest", m:["upperChest"]},
+      {n:"Angled Side Lateral DB Raise", tag:"Side Delt", m:["sideDelt"]},
+      {n:"Lower Chest Fly", tag:"Lower Chest", m:["lowerChest"]},
+      {n:"Cable Rear Reverse Fly", tag:"Rear Delt", m:["rearDelt"]},
+      {n:"Supported EZ Bar Pushdown", tag:"Triceps", m:["triceps"]},
+      {n:"Barbell Supported Skull Crusher", tag:"Triceps", m:["triceps"]},
+      {n:"Single Arm Cable Pushdown", tag:"Triceps", m:["triceps"]}
+    ]
+  },
+  {
+    id:"pullB", day:"Fri", short:"Pull B", title:"Pull B", focus:"Thickness & Rows",
+    exercises:[
+      {n:"Supported Smith Machine Row", tag:"Upper Back", m:["upperBack"]},
+      {n:"Single Arm Seated Pulldown", tag:"Upper Back", m:["upperBack","lats"]},
+      {n:"Close Grip Cable Row", tag:"Lower Back", m:["lowerBack","lats"]},
+      {n:"Close Grip T-Bar Row", tag:"Mid Back", m:["upperBack","lats"]},
+      {n:"Reverse Close Grip Cable Row", tag:"Lower Back", m:["lowerBack","lats"]},
+      {n:"Cable Bar Raise (From Behind)", tag:"Bicep · Short Head", m:["biceps"]},
+      {n:"Incline DB Curl", tag:"Bicep · Long Head", m:["biceps"]},
+      {n:"Single Arm Cable Hammer Curl", tag:"Brachialis", m:["forearm","biceps"]}
+    ]
+  }
+];
+
+/* ------------ state ------------ */
+let dayIdx = 0, exIdx = 0, playing = false, timer = null;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ------------ dom ------------ */
+const tabsEl = document.getElementById('dayTabs');
+const listEl = document.getElementById('exList');
+const titleEl = document.getElementById('dayTitle');
+const tagEl = document.getElementById('dayTag');
+const dowEl = document.getElementById('dayDow');
+const countEl = document.getElementById('exCount');
+const focusEl = document.getElementById('focusName');
+const tCount = document.getElementById('tCount');
+const playBtn = document.getElementById('playBtn');
+
+/* ------------ tabs ------------ */
+DAYS.forEach((d,i)=>{
+  const b = document.createElement('button');
+  b.className = 'day-tab';
+  b.innerHTML = `<span class="d">${d.day}</span><span class="n">${d.short}</span>`;
+  b.addEventListener('click', ()=>{ setDay(i); });
+  tabsEl.appendChild(b);
+});
+
+/* ------------ render ------------ */
+function setDay(i){
+  dayIdx = i; exIdx = 0;
+  stopPlay();
+  const d = DAYS[i];
+  [...tabsEl.children].forEach((t,k)=>t.classList.toggle('active', k===i));
+  const parts = d.title.split(' ');
+  titleEl.innerHTML = parts.length>1
+    ? `${parts[0]} <span class="focus">${parts.slice(1).join(' ')}</span>`
+    : `<span class="focus">${d.title}</span>`;
+  tagEl.textContent = d.focus;
+  dowEl.textContent = ({Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday'})[d.day];
+  countEl.textContent = d.exercises.length;
+  listEl.innerHTML = '';
+  d.exercises.forEach((ex,k)=>{
+    const row = document.createElement('button');
+    row.className = 'ex'; row.setAttribute('role','listitem');
+    row.innerHTML = `<span class="num">${String(k+1).padStart(2,'0')}</span>
+      <span class="name">${ex.n}</span>
+      <span class="tag">${ex.tag}</span>`;
+    row.addEventListener('click', ()=>{ stopPlay(); setExercise(k); });
+    listEl.appendChild(row);
+  });
+  setExercise(0, false);
+}
+
+function setExercise(k, scroll=true){
+  exIdx = k;
+  const d = DAYS[dayIdx], ex = d.exercises[k];
+  [...listEl.children].forEach((r,i)=>r.classList.toggle('active', i===k));
+  /* day muscles glow soft, current exercise muscles ignite */
+  const dayMuscles = new Set(d.exercises.flatMap(e=>e.m));
+  const active = new Set(ex.m);
+  document.querySelectorAll('.m[data-m]').forEach(p=>{
+    const m = p.dataset.m;
+    p.classList.toggle('lit', active.has(m));
+    p.classList.toggle('lit-soft', !active.has(m) && dayMuscles.has(m));
+  });
+  focusEl.textContent = ex.tag;
+  tCount.textContent = `${k+1} / ${d.exercises.length}`;
+  if(scroll){
+    const row = listEl.children[k];
+    if(row) row.scrollIntoView({block:'nearest', behavior: reduceMotion ? 'auto':'smooth'});
+  }
+}
+
+/* ------------ transport ------------ */
+function step(dir){
+  const len = DAYS[dayIdx].exercises.length;
+  setExercise((exIdx + dir + len) % len);
+}
+document.getElementById('prevBtn').addEventListener('click', ()=>{ stopPlay(); step(-1); });
+document.getElementById('nextBtn').addEventListener('click', ()=>{ stopPlay(); step(1); });
+
+playBtn.addEventListener('click', ()=>{ playing ? stopPlay() : startPlay(); });
+function startPlay(){
+  playing = true;
+  playBtn.classList.add('on'); playBtn.textContent = 'Pause';
+  playBtn.setAttribute('aria-pressed','true');
+  timer = setInterval(()=>step(1), 2200);
+}
+function stopPlay(){
+  playing = false;
+  playBtn.classList.remove('on'); playBtn.textContent = 'Play';
+  playBtn.setAttribute('aria-pressed','false');
+  if(timer){ clearInterval(timer); timer = null; }
+}
+
+/* keyboard */
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'){ stopPlay(); step(1); }
+  if(e.key==='ArrowLeft'){ stopPlay(); step(-1); }
+  if(e.key==='ArrowDown'){ e.preventDefault(); setDay((dayIdx+1)%DAYS.length); }
+  if(e.key==='ArrowUp'){ e.preventDefault(); setDay((dayIdx-1+DAYS.length)%DAYS.length); }
+});
+
+setDay(0);
+
+/* PWA: offline support */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+/* prevent iOS double-tap zoom on rapid taps */
+let lastTouch = 0;
+document.addEventListener('touchend', e => {
+  const now = Date.now();
+  if (now - lastTouch < 350) e.preventDefault();
+  lastTouch = now;
+}, {passive:false});
+</script>
+</body>
+</html>
