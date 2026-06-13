@@ -105,78 +105,69 @@
 
   /* ---------- layout ---------- */
   main{
-    display:grid;
-    grid-template-columns:minmax(320px,460px) 1fr;
-    gap:0;
-    max-width:1180px;
+    max-width:680px;
     margin:0 auto;
   }
-  /* anatomy panel */
-  .anatomy{
-    border-right:1px solid var(--line);
-    padding:22px 16px 10px;
-    position:sticky;top:64px;
-    align-self:start;
-    height:calc(100vh - 64px);
-    display:flex;flex-direction:column;
-  }
-  .anatomy-head{
-    display:flex;justify-content:space-between;align-items:baseline;
-    padding:0 6px 10px;
-  }
-  .anatomy-head .label{
-    font-family:'Barlow Condensed';font-weight:600;
-    letter-spacing:.26em;font-size:11px;color:var(--dim);
-    text-transform:uppercase;
-  }
-  #focusName{
-    font-family:'Anton';font-size:18px;letter-spacing:.03em;
-    color:var(--ember);text-transform:uppercase;
-    text-align:right;
-  }
-  /* placeholder when no gif exists */
-  .placeholder{
-    flex:1;min-height:0;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:8px;
-    border:1px dashed var(--line);
-    border-radius:18px;
-    margin:0 6px;
-    color:var(--dim);
-  }
-  .ph-mark{
-    width:54px;height:54px;border-radius:999px;
-    border:1px solid var(--line);
-    display:grid;place-items:center;
-    font-size:18px;color:#3c4654;
-  }
-  .ph-text{
-    font-family:'Barlow Condensed';font-weight:600;
-    font-size:14px;letter-spacing:.22em;text-transform:uppercase;
-  }
-  .ph-file{
-    font-family:ui-monospace,monospace;font-size:11px;
-    color:#525c6a;
-  }
 
-  /* gif demo card */
-  .gif-card{
-    flex:1;min-height:0;
-    display:flex;align-items:center;justify-content:center;
-    background:#fff;
+  /* ---------- demo bottom sheet ---------- */
+  .sheet-backdrop{
+    position:fixed;inset:0;z-index:50;
+    background:rgba(6,8,11,.72);
+    backdrop-filter:blur(3px);
+    opacity:0;pointer-events:none;
+    transition:opacity .25s;
+    display:flex;align-items:flex-end;justify-content:center;
+  }
+  .sheet-backdrop.open{opacity:1;pointer-events:auto}
+  .sheet{
+    width:100%;max-width:560px;
+    background:var(--panel-2);
     border:1px solid var(--line);
-    border-radius:18px;
-    padding:10px;
-    margin:0 6px;
+    border-bottom:none;
+    border-radius:22px 22px 0 0;
+    padding:10px 14px calc(20px + env(safe-area-inset-bottom));
+    transform:translateY(102%);
+    transition:transform .28s cubic-bezier(.22,1,.36,1);
+  }
+  .sheet-backdrop.open .sheet{transform:translateY(0)}
+  .sheet-grip{
+    width:42px;height:5px;border-radius:999px;
+    background:#39424e;margin:4px auto 12px;
+  }
+  .sheet-head{
+    display:flex;align-items:flex-start;justify-content:space-between;
+    gap:12px;margin-bottom:12px;
+  }
+  .sheet-title{
+    font-family:'Barlow Condensed';font-weight:700;
+    font-size:21px;line-height:1.1;letter-spacing:.01em;
+  }
+  .sheet-tag{
+    display:inline-block;margin-top:4px;
+    font-family:'Barlow Condensed';font-weight:600;
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ember);
+  }
+  .sheet-close{
+    flex:0 0 auto;
+    width:34px;height:34px;border-radius:999px;
+    background:none;border:1px solid var(--line);
+    color:var(--dim);font-size:18px;line-height:1;
+    cursor:pointer;display:grid;place-items:center;
+    transition:color .2s,border-color .2s;
+  }
+  .sheet-close:hover{color:var(--ember);border-color:var(--ember)}
+  .sheet-gif{
+    background:#fff;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
     overflow:hidden;
   }
-  .gif-card img{
-    max-width:100%;max-height:100%;
-    object-fit:contain;border-radius:10px;
+  .sheet-gif img{
+    width:100%;max-height:60vh;object-fit:contain;display:block;
   }
 
   /* ---------- session panel ---------- */
-  .session{padding:22px 22px 110px;min-width:0}
+  .session{padding:22px 22px 40px;min-width:0}
   .session-head h2{
     font-family:'Anton';
     font-size:clamp(26px,4.4vw,40px);
@@ -234,6 +225,16 @@
     white-space:nowrap;
   }
   .ex.active .tag{color:var(--ember);border-color:var(--ember)}
+  .ex .play-dot{
+    flex:0 0 auto;
+    width:30px;height:30px;border-radius:999px;
+    border:1px solid var(--line);
+    display:grid;place-items:center;
+    font-size:11px;color:var(--ember);
+    transition:border-color .2s,background .2s,color .2s;
+  }
+  .ex:hover .play-dot{border-color:var(--ember)}
+  .ex.no-demo .play-dot{color:#3c4654;border-style:dashed}
 
   /* ---------- edit mode ---------- */
   .edit-btn{
@@ -305,45 +306,6 @@
     .ed-grid{grid-template-columns:1fr}
   }
 
-  /* ---------- transport bar ---------- */
-  .transport{
-    position:fixed;left:0;right:0;bottom:0;z-index:40;
-    display:flex;justify-content:center;
-    padding:14px 16px calc(18px + env(safe-area-inset-bottom));
-    background:linear-gradient(to top,var(--bg) 55%,transparent);
-    pointer-events:none;
-  }
-  .transport .inner{
-    pointer-events:auto;
-    display:flex;align-items:center;gap:10px;
-    background:var(--panel-2);
-    border:1px solid var(--line);
-    border-radius:999px;
-    padding:8px 10px;
-    box-shadow:0 10px 30px rgba(0,0,0,.5);
-  }
-  .tbtn{
-    background:none;border:1px solid var(--line);
-    color:var(--bone);border-radius:999px;
-    width:40px;height:40px;cursor:pointer;
-    font-size:16px;line-height:1;
-    display:grid;place-items:center;
-    transition:border-color .2s,color .2s;
-  }
-  .tbtn:hover{border-color:var(--ember);color:var(--ember)}
-  .tbtn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
-  .tbtn.play{
-    width:auto;padding:0 18px;
-    font-family:'Barlow Condensed';font-weight:700;
-    letter-spacing:.2em;font-size:12px;text-transform:uppercase;
-  }
-  .tbtn.play.on{background:var(--ember);border-color:var(--ember);color:#0e1013}
-  .tcount{
-    font-family:'Barlow Condensed';font-weight:600;
-    font-size:13px;letter-spacing:.14em;color:var(--dim);
-    min-width:54px;text-align:center;
-  }
-
   footer{
     border-top:1px solid var(--line);
     padding:18px 22px 26px;color:#525c6a;
@@ -352,21 +314,13 @@
   }
 
   /* ---------- responsive ---------- */
-  @media (max-width:840px){
-    main{grid-template-columns:1fr}
-    .anatomy{
-      position:sticky;top:64px;height:auto;
-      border-right:none;border-bottom:1px solid var(--line);
-      background:var(--bg);z-index:20;
-      padding:12px 14px 6px;
-    }
-    .placeholder{min-height:200px}
-    .gif-card{max-height:300px}
-    .session{padding:18px 16px 120px}
+  @media (max-width:560px){
+    header{padding:22px 18px 12px}
+    .session{padding:18px 16px 40px}
   }
   @media (prefers-reduced-motion:reduce){
-    .m.lit{animation:none}
     .ex,.ex.active{transition:none;transform:none}
+    .sheet{transition:none}
   }
 </style>
 </head>
@@ -375,27 +329,12 @@
 <header>
   <div class="kicker">High-Volume Bodybuilding Program</div>
   <h1>The Split <span class="thin">/ 5-Day PPL A·B</span></h1>
-  <p class="sub">Tap any exercise to see its demo. Hit play to walk through the session in order, set by set.</p>
+  <p class="sub">Your full week, one tap away. Open a day, tap any exercise with a ▶ to watch the demo.</p>
 </header>
 
 <nav class="days" id="dayTabs" aria-label="Training days"></nav>
 
 <main>
-  <section class="anatomy" aria-label="Muscle map">
-    <div class="anatomy-head">
-      <span class="label">Demo</span>
-      <span id="focusName">—</span>
-    </div>
-    <div class="gif-card" id="gifCard" hidden>
-      <img id="gifImg" alt="Exercise demonstration" decoding="async">
-    </div>
-    <div class="placeholder" id="placeholder">
-      <div class="ph-mark">▶</div>
-      <div class="ph-text">No demo yet</div>
-      <div class="ph-file" id="phFile"></div>
-    </div>
-  </section>
-
   <section class="session">
     <div class="session-head">
       <h2 id="dayTitle"></h2>
@@ -422,16 +361,23 @@
   </section>
 </main>
 
-<div class="transport">
-  <div class="inner">
-    <button class="tbtn" id="prevBtn" aria-label="Previous exercise">‹</button>
-    <button class="tbtn play" id="playBtn" aria-pressed="false">Play</button>
-    <span class="tcount" id="tCount">1 / 9</span>
-    <button class="tbtn" id="nextBtn" aria-label="Next exercise">›</button>
+<footer>Train hard, recover harder. Built for the 5-day PPL A·B rotation.</footer>
+
+<div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title" id="sheetTitle"></div>
+        <span class="sheet-tag" id="sheetTag"></span>
+      </div>
+      <button class="sheet-close" id="sheetClose" aria-label="Close demo">×</button>
+    </div>
+    <div class="sheet-gif">
+      <img id="sheetImg" alt="Exercise demonstration" decoding="async">
+    </div>
   </div>
 </div>
-
-<footer>Train hard, recover harder. Built for the 5-day PPL A·B rotation.</footer>
 
 <script>
 /* ------------ data ------------ */
@@ -544,9 +490,7 @@ function slugify(s){
 }
 
 /* ------------ state ------------ */
-let dayIdx = 0, exIdx = 0, playing = false, timer = null, editMode = false;
-const reduceMotion = typeof matchMedia === 'function'
-  ? matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+let dayIdx = 0, editMode = false;
 
 /* ------------ dom ------------ */
 const tabsEl = document.getElementById('dayTabs');
@@ -555,35 +499,44 @@ const titleEl = document.getElementById('dayTitle');
 const tagEl = document.getElementById('dayTag');
 const dowEl = document.getElementById('dayDow');
 const countEl = document.getElementById('exCount');
-const focusEl = document.getElementById('focusName');
-const tCount = document.getElementById('tCount');
-const playBtn = document.getElementById('playBtn');
-const gifCard = document.getElementById('gifCard');
-const gifImg = document.getElementById('gifImg');
-const placeholderEl = document.getElementById('placeholder');
-const phFile = document.getElementById('phFile');
+const backdrop = document.getElementById('sheetBackdrop');
+const sheetImg = document.getElementById('sheetImg');
+const sheetTitle = document.getElementById('sheetTitle');
+const sheetTag = document.getElementById('sheetTag');
 
-/* ------------ gif demo with placeholder fallback ------------ */
-let loadToken = 0;
+/* ------------ gif existence cache ------------ */
+/* probe each slug once; remember yes/no so rows can show a demo dot.
+   resolves to true/false, never rejects. */
+const gifStatus = new Map();
+function checkGif(slug){
+  if(!slug) return Promise.resolve(false);
+  if(gifStatus.has(slug)) return gifStatus.get(slug);
+  const p = new Promise(res=>{
+    const img = new Image();
+    img.onload = ()=>res(true);
+    img.onerror = ()=>res(false);
+    img.src = 'gifs/' + slug + '.gif';
+  });
+  gifStatus.set(slug, p);
+  return p;
+}
 
-function showGif(){ gifCard.hidden = false; placeholderEl.hidden = true; }
-function showPlaceholder(slug){
-  gifCard.hidden = true; placeholderEl.hidden = false;
-  phFile.textContent = slug ? `add gifs/${slug}.gif` : '';
+/* ------------ demo sheet ------------ */
+function openSheet(ex){
+  sheetTitle.textContent = ex.n;
+  sheetTag.textContent = ex.tag;
+  sheetImg.src = 'gifs/' + ex.g + '.gif';
+  backdrop.classList.add('open');
+  backdrop.setAttribute('aria-hidden','false');
 }
-function loadMedia(ex){
-  const token = ++loadToken;
-  showPlaceholder(ex.g);
-  if(!ex.g) return;
-  const probe = new Image();
-  probe.onload = ()=>{
-    if(token !== loadToken) return;
-    gifImg.src = probe.src;
-    showGif();
-  };
-  probe.onerror = ()=>{ if(token === loadToken) showPlaceholder(ex.g); };
-  probe.src = 'gifs/' + ex.g + '.gif';
+function closeSheet(){
+  backdrop.classList.remove('open');
+  backdrop.setAttribute('aria-hidden','true');
+  sheetImg.src = '';
 }
+document.getElementById('sheetClose').addEventListener('click', closeSheet);
+backdrop.addEventListener('click', e=>{ if(e.target === backdrop) closeSheet(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSheet(); });
 
 /* ------------ tabs ------------ */
 DAYS.forEach((d,i)=>{
@@ -596,8 +549,7 @@ DAYS.forEach((d,i)=>{
 
 /* ------------ render ------------ */
 function setDay(i){
-  dayIdx = i; exIdx = 0;
-  stopPlay();
+  dayIdx = i;
   const d = DAYS[i];
   [...tabsEl.children].forEach((t,k)=>t.classList.toggle('active', k===i));
   const parts = d.title.split(' ');
@@ -607,8 +559,6 @@ function setDay(i){
   tagEl.textContent = d.focus;
   dowEl.textContent = ({Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday'})[d.day];
   renderList();
-  if(d.exercises.length) setExercise(Math.min(exIdx, d.exercises.length-1), false);
-  else clearStage();
 }
 
 function esc(s){
@@ -624,6 +574,7 @@ function renderList(){
     empty.className = 'empty';
     empty.textContent = 'No exercises in this day. Tap Edit to add one.';
     listEl.appendChild(empty);
+    return;
   }
   d.exercises.forEach((ex,k)=>{
     if(editMode){
@@ -645,69 +596,24 @@ function renderList(){
       listEl.appendChild(row);
     } else {
       const row = document.createElement('button');
-      row.className = 'ex'; row.setAttribute('role','listitem');
+      row.className = 'ex no-demo'; row.setAttribute('role','listitem');
       row.innerHTML = `<span class="num">${String(k+1).padStart(2,'0')}</span>
         <span class="name">${esc(ex.n)}</span>
-        <span class="tag">${esc(ex.tag)}</span>`;
-      row.addEventListener('click', ()=>{ stopPlay(); setExercise(k); });
+        <span class="tag">${esc(ex.tag)}</span>
+        <span class="play-dot" aria-hidden="true">▶</span>`;
+      /* probe the gif; only open the sheet if one exists */
+      checkGif(ex.g).then(has=>{
+        row.classList.toggle('no-demo', !has);
+        row.dataset.hasDemo = has ? '1' : '';
+      });
+      row.addEventListener('click', ()=>{
+        if(row.dataset.hasDemo) openSheet(ex);
+        /* no demo: row does nothing, no error shown */
+      });
       listEl.appendChild(row);
     }
   });
 }
-
-function clearStage(){
-  focusEl.textContent = '—';
-  tCount.textContent = '0 / 0';
-  showPlaceholder('');
-}
-
-function setExercise(k, scroll=true){
-  const d = DAYS[dayIdx];
-  if(!d.exercises.length){ clearStage(); return; }
-  k = Math.max(0, Math.min(k, d.exercises.length-1));
-  exIdx = k;
-  const ex = d.exercises[k];
-  [...listEl.children].forEach((r,i)=>r.classList.toggle('active', i===k));
-  focusEl.textContent = ex.tag;
-  loadMedia(ex);
-  tCount.textContent = `${k+1} / ${d.exercises.length}`;
-  if(scroll){
-    const row = listEl.children[k];
-    if(row && row.scrollIntoView) row.scrollIntoView({block:'nearest', behavior: reduceMotion ? 'auto':'smooth'});
-  }
-}
-
-/* ------------ transport ------------ */
-function step(dir){
-  const len = DAYS[dayIdx].exercises.length;
-  if(!len) return;
-  setExercise((exIdx + dir + len) % len);
-}
-document.getElementById('prevBtn').addEventListener('click', ()=>{ stopPlay(); step(-1); });
-document.getElementById('nextBtn').addEventListener('click', ()=>{ stopPlay(); step(1); });
-
-playBtn.addEventListener('click', ()=>{ playing ? stopPlay() : startPlay(); });
-function startPlay(){
-  playing = true;
-  playBtn.classList.add('on'); playBtn.textContent = 'Pause';
-  playBtn.setAttribute('aria-pressed','true');
-  timer = setInterval(()=>step(1), 2200);
-}
-function stopPlay(){
-  playing = false;
-  playBtn.classList.remove('on'); playBtn.textContent = 'Play';
-  playBtn.setAttribute('aria-pressed','false');
-  if(timer){ clearInterval(timer); timer = null; }
-}
-
-/* keyboard */
-document.addEventListener('keydown', e=>{
-  if(e.target.matches('input,select,textarea')) return;
-  if(e.key==='ArrowRight'){ stopPlay(); step(1); }
-  if(e.key==='ArrowLeft'){ stopPlay(); step(-1); }
-  if(e.key==='ArrowDown'){ e.preventDefault(); setDay((dayIdx+1)%DAYS.length); }
-  if(e.key==='ArrowUp'){ e.preventDefault(); setDay((dayIdx-1+DAYS.length)%DAYS.length); }
-});
 
 setDay(0);
 
@@ -730,13 +636,8 @@ function enterEditUI(){
   editBtn.textContent = editMode ? '✓ Done' : '✎ Edit';
   editorEl.hidden = !editMode;
   renderList();
-  if(!editMode){
-    const len = DAYS[dayIdx].exercises.length;
-    len ? setExercise(Math.min(exIdx, len-1), false) : clearStage();
-  }
 }
 editBtn.addEventListener('click', ()=>{
-  stopPlay();
   editMode = !editMode;
   enterEditUI();
   if(editMode) edName.focus();
@@ -754,11 +655,13 @@ function addExercise(){
   const name = edName.value.trim();
   if(!name){ edName.focus(); return; }
   const mKey = edMuscle.value;
+  const slug = slugify(name);
+  gifStatus.delete(slug);   /* re-probe in case a gif was just added */
   DAYS[dayIdx].exercises.push({
     n: name,
     tag: MUSCLES[mKey],
     m: [mKey],
-    g: slugify(name)
+    g: slug
   });
   persistDay();
   edName.value = '';
