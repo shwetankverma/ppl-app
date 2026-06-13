@@ -25,8 +25,15 @@ html,body{min-height:100%}
 body{background:var(--bg);color:var(--bone);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 ::selection{background:var(--ember);color:#0e1013}
 
-/* loading overlay */
-#loading{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:99;font-family:'Barlow Condensed';font-size:13px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+/* loading */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99;gap:14px}
+.ld-ring{width:36px;height:36px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--ember);animation:spin .7s linear infinite}
+.ld-txt{font-family:'Barlow Condensed';font-size:12px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* toast */
+#toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:#1e252f;border:1px solid var(--line);border-radius:10px;padding:10px 18px;font-family:'Barlow Condensed';font-size:13px;letter-spacing:.1em;color:var(--bone);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap;z-index:98}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* header */
 header{padding:24px 20px 14px;border-bottom:1px solid var(--line)}
@@ -34,6 +41,13 @@ header{padding:24px 20px 14px;border-bottom:1px solid var(--line)}
 h1{font-family:'Anton';font-size:clamp(30px,7vw,52px);letter-spacing:.01em;line-height:1;margin-top:6px;text-transform:uppercase}
 h1 .thin{color:var(--dim)}
 .sub{margin-top:6px;color:var(--dim);font-size:13px;line-height:1.5}
+
+/* sync indicator */
+.sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3c4654;margin-left:8px;vertical-align:middle;transition:background .3s}
+.sync-dot.ok{background:#3ecf8e}
+.sync-dot.busy{background:var(--ember);animation:pulse 1s ease-in-out infinite}
+.sync-dot.err{background:#e05555}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* day tabs */
 nav.days{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:30}
@@ -47,7 +61,7 @@ nav.days::-webkit-scrollbar{display:none}
 
 /* layout */
 main{max-width:680px;margin:0 auto}
-.session{padding:20px 20px 60px}
+.session{padding:20px 20px 80px}
 .session-head h2{font-family:'Anton';font-size:clamp(24px,4.4vw,38px);text-transform:uppercase;letter-spacing:.015em;line-height:1.05}
 .session-head .focus{color:var(--ember)}
 .meta{display:flex;gap:12px;margin-top:8px;font-family:'Barlow Condensed';font-size:12px;font-weight:600;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;align-items:center;flex-wrap:wrap}
@@ -70,12 +84,12 @@ main{max-width:680px;margin:0 auto}
 .ed-add:hover{background:var(--ember-soft)!important}
 .ed-reset:hover,.ed-done:hover{color:var(--ember);border-color:var(--ember)}
 
-/* exercise list */
+/* list */
 .ex-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
 .empty{border:1px dashed var(--line);border-radius:12px;padding:26px 16px;text-align:center;color:var(--dim);font-size:13px}
 
 /* exercise row — normal */
-.ex{display:grid;grid-template-columns:44px 1fr 32px;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-left:3px solid transparent;border-radius:12px;padding:13px 14px 13px 12px;cursor:pointer;text-align:left;width:100%;color:var(--bone);transition:border-color .2s,background .2s}
+.ex{display:grid;grid-template-columns:44px 1fr 32px;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-left:3px solid transparent;border-radius:12px;padding:13px 14px 13px 12px;cursor:pointer;text-align:left;width:100%;color:var(--bone);transition:border-color .2s}
 .ex:hover{border-color:#36404d}
 .ex:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 .ex.has-demo{border-left-color:var(--ember)}
@@ -87,24 +101,23 @@ main{max-width:680px;margin:0 auto}
 .ex.has-demo .play-dot{color:var(--ember);border-color:var(--ember)}
 .ex.has-demo:hover .play-dot{background:var(--ember-dim)}
 
-/* exercise row — edit mode */
+/* edit row */
 .ex.editing{grid-template-columns:44px 1fr 32px 32px;cursor:default}
 .ex.editing:hover{border-color:var(--line)}
 
-/* upload button */
+/* upload btn */
 .up-btn{width:32px;height:32px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--dim);font-size:16px;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:color .2s,border-color .2s;position:relative;overflow:hidden}
 .up-btn:hover{color:var(--ember);border-color:var(--ember)}
 .up-btn.has-media{border-color:var(--ember);color:var(--ember)}
 .up-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0}
-.up-btn.loading{pointer-events:none}
+.up-btn.loading{pointer-events:none;color:transparent}
 .up-btn.loading::after{content:'';position:absolute;inset:4px;border-radius:999px;border:2px solid var(--ember);border-top-color:transparent;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 
-/* remove button */
+/* remove btn */
 .rm{width:32px;height:32px;border-radius:999px;background:none;border:1px solid var(--line);color:var(--dim);font-size:17px;line-height:1;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:color .2s,border-color .2s}
 .rm:hover{color:#e05555;border-color:#e05555}
 
-/* bottom sheet */
+/* sheet */
 .sheet-backdrop{position:fixed;inset:0;z-index:50;background:rgba(6,8,11,.75);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .22s;display:flex;align-items:flex-end;justify-content:center}
 .sheet-backdrop.open{opacity:1;pointer-events:auto}
 .sheet{width:100%;max-width:560px;background:var(--panel-2);border:1px solid var(--line);border-bottom:none;border-radius:22px 22px 0 0;padding:10px 14px calc(24px + env(safe-area-inset-bottom));transform:translateY(104%);transition:transform .28s cubic-bezier(.22,1,.36,1)}
@@ -123,17 +136,25 @@ main{max-width:680px;margin:0 auto}
 .sheet-empty{padding:40px;text-align:center;color:#525c6a;font-family:'Barlow Condensed';letter-spacing:.1em;font-size:13px;text-transform:uppercase}
 
 footer{border-top:1px solid var(--line);padding:16px 20px 24px;color:#525c6a;font-size:11.5px;text-align:center}
-@media(prefers-reduced-motion:reduce){.sheet{transition:none}.ex{transition:none}}
+@media(prefers-reduced-motion:reduce){.sheet{transition:none}.ex{transition:none}.ld-ring{animation:none}}
 </style>
 </head>
 <body>
 
-<div id="loading">Loading…</div>
+<div id="loading">
+  <div class="ld-ring"></div>
+  <div class="ld-txt">Loading your split…</div>
+</div>
+
+<div id="toast"></div>
 
 <header>
   <div class="kicker">High-Volume Bodybuilding Program</div>
   <h1>The Split <span class="thin">/ 5-Day PPL A·B</span></h1>
-  <p class="sub">Tap any exercise with a ▶ to see its demo. In Edit mode, upload your own GIF, image, or video.</p>
+  <p class="sub">
+    Tap any exercise with a ▶ to see its demo. In Edit mode, upload your own GIF, image, or video.
+    <span class="sync-dot" id="syncDot" title="Sync status"></span>
+  </p>
 </header>
 
 <nav class="days" id="dayTabs" aria-label="Training days"></nav>
@@ -184,7 +205,77 @@ footer{border-top:1px solid var(--line);padding:16px 20px 24px;color:#525c6a;fon
 </div>
 
 <script>
-/* ── DATA ──────────────────────────────────────────────────────── */
+/* ── CONFIG ─────────────────────────────────────────────────────── */
+const SB_URL    = 'https://dlqtrzsrhrvlpwfeqgnv.supabase.co';
+const SB_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRscXRyenNyaHJ2bHB3ZmVxZ252Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMjQ5MDIsImV4cCI6MjA5NjkwMDkwMn0.UZ9-i2nLSDAm16PFXw0wpLOyS34mMuX_6k5rEVtIWdI';
+const BUCKET    = 'exercise-media';
+const SB_HEADS  = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+
+/* ── SUPABASE HELPERS ───────────────────────────────────────────── */
+async function sbFetch(path, opts={}){
+  const r = await fetch(SB_URL + path, {
+    ...opts,
+    headers: { ...SB_HEADS, 'Content-Type':'application/json', ...(opts.headers||{}) }
+  });
+  if(!r.ok){ const t=await r.text(); throw new Error(t); }
+  return r;
+}
+
+/* DB — exercise lists */
+async function dbLoadDay(dayId){
+  const r = await sbFetch(`/rest/v1/ppl_days?id=eq.${dayId}&select=exercises`, {
+    headers:{ 'Accept':'application/json' }
+  });
+  const rows = await r.json();
+  return rows.length ? rows[0].exercises : null;
+}
+async function dbSaveDay(dayId, exercises){
+  await sbFetch('/rest/v1/ppl_days', {
+    method:'POST',
+    headers:{ 'Prefer':'resolution=merge-duplicates' },
+    body: JSON.stringify({ id: dayId, exercises })
+  });
+}
+
+/* Storage — media blobs */
+function mediaPath(exId, filename){ return `${exId}/${filename}`; }
+
+async function storageUpload(exId, file){
+  // delete any existing files for this exercise first
+  await storagePurge(exId);
+  const ext  = file.name.split('.').pop() || 'bin';
+  const path = mediaPath(exId, `demo.${ext}`);
+  const r = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`, {
+    method: 'POST',
+    headers: { ...SB_HEADS, 'Content-Type': file.type || 'application/octet-stream' },
+    body: file
+  });
+  if(!r.ok){ const t=await r.text(); throw new Error(t); }
+  return path;
+}
+async function storagePurge(exId){
+  // list and delete everything under exId/
+  try{
+    const r = await fetch(`${SB_URL}/storage/v1/object/list/${BUCKET}`, {
+      method:'POST',
+      headers:{ ...SB_HEADS, 'Content-Type':'application/json' },
+      body: JSON.stringify({ prefix: exId+'/' })
+    });
+    if(!r.ok) return;
+    const files = await r.json();
+    if(!files.length) return;
+    await fetch(`${SB_URL}/storage/v1/object/${BUCKET}`, {
+      method:'DELETE',
+      headers:{ ...SB_HEADS, 'Content-Type':'application/json' },
+      body: JSON.stringify({ prefixes: files.map(f=>`${exId}/${f.name}`) })
+    });
+  }catch(e){ /* best effort */ }
+}
+function storagePublicUrl(path){
+  return `${SB_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+}
+
+/* ── DEFAULT DATA ───────────────────────────────────────────────── */
 const DEFAULT_DAYS = [
   {id:"pushA",day:"Mon",short:"Push A",title:"Push A",focus:"Chest",exercises:[
     {n:"DB Chest Press",tag:"Mid Chest",m:["midChest"]},
@@ -247,134 +338,103 @@ const MUSCLES = {
   quads:'Quads',hams:'Hamstrings',glutes:'Glutes',calves:'Calves'
 };
 
-/* ── IndexedDB — stores raw Blobs keyed by exercise id ─────────── */
-const DB_NAME = 'ppl-media', DB_VER = 1, IDB_STORE = 'media';
-let _db = null;
-
-function openDB(){
-  if(_db) return Promise.resolve(_db);
-  return new Promise((res,rej)=>{
-    const r = indexedDB.open(DB_NAME, DB_VER);
-    r.onupgradeneeded = e => e.target.result.createObjectStore(IDB_STORE);
-    r.onsuccess = e => { _db = e.target.result; res(_db); };
-    r.onerror   = e => rej(e.target.error);
-  });
-}
-const idb = {
-  put(key, blob){ return openDB().then(db=>new Promise((res,rej)=>{ const tx=db.transaction(IDB_STORE,'readwrite'); tx.objectStore(IDB_STORE).put(blob,key); tx.oncomplete=res; tx.onerror=e=>rej(e.target.error); })); },
-  get(key){ return openDB().then(db=>new Promise((res,rej)=>{ const r=db.transaction(IDB_STORE,'readonly').objectStore(IDB_STORE).get(key); r.onsuccess=e=>res(e.target.result||null); r.onerror=e=>rej(e.target.error); })); },
-  del(key){ return openDB().then(db=>new Promise((res,rej)=>{ const tx=db.transaction(IDB_STORE,'readwrite'); tx.objectStore(IDB_STORE).delete(key); tx.oncomplete=res; tx.onerror=e=>rej(e.target.error); })); },
-  keys(){ return openDB().then(db=>new Promise((res,rej)=>{ const r=db.transaction(IDB_STORE,'readonly').objectStore(IDB_STORE).getAllKeys(); r.onsuccess=e=>res(new Set(e.target.result)); r.onerror=e=>rej(e.target.error); })); }
-};
-
-/* in-memory set of which exIds have stored media — hydrated on boot */
-let mediaKeys = new Set();
-function hasMedia(id){ return mediaKeys.has(id); }
-
-async function saveMedia(exId, blob){
-  await idb.put(exId, blob);
-  mediaKeys.add(exId);
-}
-async function deleteMedia(exId){
-  await idb.del(exId);
-  mediaKeys.delete(exId);
-}
-
-/* ── Exercise list — localStorage (tiny JSON, never evicted) ───── */
-const EX_KEY = 'ppl-custom-v1';
-function loadJSON(k){ try{ return JSON.parse(localStorage.getItem(k))||{}; }catch(e){ return {}; } }
-function saveJSON(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
-let custom = loadJSON(EX_KEY);
-
 function makeId(){ return Math.random().toString(36).slice(2,9); }
-function cloneDefaults(){
-  return DEFAULT_DAYS.map(d=>({...d, exercises:d.exercises.map(e=>({...e,m:[...e.m],id:makeId()}))}));
-}
-const DAYS = cloneDefaults();
-DAYS.forEach(d=>{ if(Array.isArray(custom[d.id])) d.exercises=custom[d.id]; });
-DAYS.forEach(d=>d.exercises.forEach(e=>{ if(!e.id) e.id=makeId(); }));
 
-function persistDay(){
-  custom[DAYS[dayIdx].id]=DAYS[dayIdx].exercises;
-  saveJSON(EX_KEY,custom);
-}
-function resetDay(){
-  const d=DAYS[dayIdx];
-  Promise.all(d.exercises.map(e=>deleteMedia(e.id))).then(()=>{
-    delete custom[d.id]; saveJSON(EX_KEY,custom);
-    d.exercises=cloneDefaults().find(x=>x.id===d.id).exercises;
-    setDay(dayIdx); editMode=true; enterEditUI();
-  });
+/* ── STATE ──────────────────────────────────────────────────────── */
+let DAYS       = [];          // live exercise data
+let mediaMap   = new Map();   // exId -> public URL string
+let dayIdx     = 0;
+let editMode   = false;
+let sheetExId  = null;
+
+/* ── SYNC DOT / TOAST ───────────────────────────────────────────── */
+const syncDot = document.getElementById('syncDot');
+const toastEl = document.getElementById('toast');
+let toastTimer;
+
+function setSyncDot(state){ syncDot.className='sync-dot '+state; }
+
+function toast(msg, dur=2800){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toastEl.classList.remove('show'), dur);
 }
 
-/* ── State ─────────────────────────────────────────────────────── */
-let dayIdx=0, editMode=false, sheetExId=null;
-
-/* ── DOM ───────────────────────────────────────────────────────── */
-const tabsEl     = document.getElementById('dayTabs');
-const listEl     = document.getElementById('exList');
-const titleEl    = document.getElementById('dayTitle');
-const tagEl      = document.getElementById('dayTag');
-const dowEl      = document.getElementById('dayDow');
-const countEl    = document.getElementById('exCount');
-const backdrop   = document.getElementById('sheetBackdrop');
-const sheetMedia = document.getElementById('sheetMedia');
+/* ── DOM ────────────────────────────────────────────────────────── */
+const tabsEl       = document.getElementById('dayTabs');
+const listEl       = document.getElementById('exList');
+const titleEl      = document.getElementById('dayTitle');
+const tagEl        = document.getElementById('dayTag');
+const dowEl        = document.getElementById('dayDow');
+const countEl      = document.getElementById('exCount');
+const backdrop     = document.getElementById('sheetBackdrop');
+const sheetMediaEl = document.getElementById('sheetMedia');
 const sheetTitleEl = document.getElementById('sheetTitle');
 const sheetTagEl   = document.getElementById('sheetTag');
 
-/* ── Bottom sheet ──────────────────────────────────────────────── */
-let objectURL = null;
-function revokeURL(){ if(objectURL){ URL.revokeObjectURL(objectURL); objectURL=null; } }
-
+/* ── SHEET ──────────────────────────────────────────────────────── */
 function openSheet(ex){
   sheetExId=ex.id;
   sheetTitleEl.textContent=ex.n;
   sheetTagEl.textContent=ex.tag;
-  sheetMedia.innerHTML='<div class="sheet-empty">Loading…</div>';
+  sheetMediaEl.innerHTML='<div class="sheet-empty">Loading…</div>';
   backdrop.classList.add('open');
   backdrop.setAttribute('aria-hidden','false');
-  idb.get(ex.id).then(blob=>{
-    revokeURL();
-    sheetMedia.innerHTML='';
-    if(!blob){ sheetMedia.innerHTML='<div class="sheet-empty">No demo yet</div>'; return; }
-    objectURL = URL.createObjectURL(blob);
-    if(blob.type.startsWith('video/')){
-      const v=document.createElement('video');
-      v.src=objectURL; v.controls=true; v.loop=true; v.playsInline=true; v.autoplay=true;
-      sheetMedia.appendChild(v);
-    } else {
-      const img=document.createElement('img');
-      img.src=objectURL; img.alt='Exercise demo';
-      sheetMedia.appendChild(img);
-    }
-  });
+  const url=mediaMap.get(ex.id);
+  sheetMediaEl.innerHTML='';
+  if(!url){ sheetMediaEl.innerHTML='<div class="sheet-empty">No demo added yet</div>'; return; }
+  const isVideo=/\.(mp4|mov|webm|avi)(\?|$)/i.test(url);
+  if(isVideo){
+    const v=document.createElement('video');
+    v.src=url; v.controls=true; v.loop=true; v.playsInline=true; v.autoplay=true;
+    sheetMediaEl.appendChild(v);
+  } else {
+    const img=document.createElement('img');
+    img.src=url+'?t='+Date.now(); img.alt='Exercise demo'; // cache-bust
+    sheetMediaEl.appendChild(img);
+  }
 }
 function closeSheet(){
   backdrop.classList.remove('open');
   backdrop.setAttribute('aria-hidden','true');
-  const v=sheetMedia.querySelector('video');
+  const v=sheetMediaEl.querySelector('video');
   if(v) v.pause();
-  setTimeout(()=>{ sheetMedia.innerHTML=''; revokeURL(); },300);
+  setTimeout(()=>sheetMediaEl.innerHTML='',300);
   sheetExId=null;
 }
-document.getElementById('sheetDel').addEventListener('click',()=>{
+
+document.getElementById('sheetDel').addEventListener('click', async()=>{
   if(!sheetExId||!confirm('Remove this demo?')) return;
-  deleteMedia(sheetExId).then(()=>{ closeSheet(); renderList(); });
+  setSyncDot('busy');
+  try{
+    await storagePurge(sheetExId);
+    mediaMap.delete(sheetExId);
+    // remove media_url from exercise record
+    const d=DAYS[dayIdx];
+    const ex=d.exercises.find(e=>e.id===sheetExId);
+    if(ex){ delete ex.media_url; await dbSaveDay(d.id, d.exercises); }
+    setSyncDot('ok'); toast('Demo removed');
+    closeSheet(); renderList();
+  }catch(e){ setSyncDot('err'); toast('Error: '+e.message); }
 });
 document.getElementById('sheetClose').addEventListener('click',closeSheet);
 backdrop.addEventListener('click',e=>{ if(e.target===backdrop) closeSheet(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSheet(); });
 
-/* ── Tabs ──────────────────────────────────────────────────────── */
-DAYS.forEach((d,i)=>{
-  const b=document.createElement('button');
-  b.className='day-tab';
-  b.innerHTML=`<span class="d">${d.day}</span><span class="n">${d.short}</span>`;
-  b.addEventListener('click',()=>setDay(i));
-  tabsEl.appendChild(b);
-});
+/* ── TABS ───────────────────────────────────────────────────────── */
+function buildTabs(){
+  tabsEl.innerHTML='';
+  DAYS.forEach((d,i)=>{
+    const b=document.createElement('button');
+    b.className='day-tab';
+    b.innerHTML=`<span class="d">${d.day}</span><span class="n">${d.short}</span>`;
+    b.addEventListener('click',()=>setDay(i));
+    tabsEl.appendChild(b);
+  });
+}
 
-/* ── Render ────────────────────────────────────────────────────── */
+/* ── RENDER ─────────────────────────────────────────────────────── */
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function setDay(i){
@@ -400,7 +460,7 @@ function renderList(){
     listEl.appendChild(el); return;
   }
   d.exercises.forEach((ex,k)=>{
-    const has=hasMedia(ex.id);
+    const has=mediaMap.has(ex.id);
     if(editMode){
       const row=document.createElement('div');
       row.className='ex editing';
@@ -411,32 +471,44 @@ function renderList(){
           <span class="tag">${esc(ex.tag)}</span>
         </span>`;
 
-      /* upload label */
+      /* upload */
       const lbl=document.createElement('label');
       lbl.className='up-btn'+(has?' has-media':'');
       lbl.title=has?'Replace demo':'Upload demo';
-      lbl.setAttribute('aria-label',(has?'Replace':'Upload')+' demo for '+ex.n);
       lbl.innerHTML=has?'✦':'＋';
       const inp=document.createElement('input');
       inp.type='file'; inp.accept='image/*,video/*,.gif';
       inp.addEventListener('change',async()=>{
         const file=inp.files[0]; if(!file) return;
-        lbl.classList.add('loading'); lbl.querySelector('span,i,b')?.remove();
-        // clear icon text while spinner shows
-        [...lbl.childNodes].forEach(n=>{ if(n.nodeType===3) n.textContent=''; });
+        lbl.classList.add('loading');
+        setSyncDot('busy');
         try{
-          await saveMedia(ex.id, file);
+          const path=await storageUpload(ex.id, file);
+          const url=storagePublicUrl(path);
+          mediaMap.set(ex.id, url);
+          // persist url on the exercise object so we can reload it
+          ex.media_url=url;
+          await dbSaveDay(DAYS[dayIdx].id, DAYS[dayIdx].exercises);
+          setSyncDot('ok'); toast('Demo saved ✓');
           renderList();
-        }catch(err){ alert('Save failed: '+err.message); renderList(); }
+        }catch(e){ setSyncDot('err'); toast('Upload failed: '+e.message); lbl.classList.remove('loading'); }
       });
       lbl.appendChild(inp);
       row.appendChild(lbl);
 
-      /* remove button */
+      /* remove */
       const rm=document.createElement('button');
       rm.className='rm'; rm.setAttribute('aria-label','Remove '+ex.n); rm.textContent='×';
-      rm.addEventListener('click',()=>{
-        deleteMedia(ex.id).then(()=>{ d.exercises.splice(k,1); persistDay(); renderList(); });
+      rm.addEventListener('click',async()=>{
+        setSyncDot('busy');
+        try{
+          await storagePurge(ex.id);
+          mediaMap.delete(ex.id);
+          d.exercises.splice(k,1);
+          await dbSaveDay(d.id, d.exercises);
+          setSyncDot('ok'); toast('Exercise removed');
+          renderList();
+        }catch(e){ setSyncDot('err'); toast('Error: '+e.message); }
       });
       row.appendChild(rm);
       listEl.appendChild(row);
@@ -458,7 +530,7 @@ function renderList(){
   });
 }
 
-/* ── Edit mode ─────────────────────────────────────────────────── */
+/* ── EDIT MODE ──────────────────────────────────────────────────── */
 const editBtn  = document.getElementById('editBtn');
 const editorEl = document.getElementById('editor');
 const edName   = document.getElementById('edName');
@@ -477,28 +549,74 @@ function enterEditUI(){
 }
 editBtn.addEventListener('click',()=>{ editMode=!editMode; enterEditUI(); if(editMode) edName.focus(); });
 document.getElementById('edDone').addEventListener('click',()=>{ editMode=false; enterEditUI(); });
-document.getElementById('edReset').addEventListener('click',()=>{ if(confirm('Reset this day to the original program?')) resetDay(); });
+document.getElementById('edReset').addEventListener('click',async()=>{
+  if(!confirm('Reset this day to the original program?')) return;
+  const d=DAYS[dayIdx];
+  setSyncDot('busy');
+  try{
+    // purge storage for all exercises in this day
+    await Promise.all(d.exercises.map(e=>storagePurge(e.id)));
+    d.exercises.forEach(e=>mediaMap.delete(e.id));
+    // restore defaults
+    const def=DEFAULT_DAYS.find(x=>x.id===d.id);
+    d.exercises=def.exercises.map(e=>({...e,m:[...e.m],id:makeId()}));
+    await dbSaveDay(d.id, d.exercises);
+    setSyncDot('ok'); toast('Day reset to default');
+    renderList();
+  }catch(e){ setSyncDot('err'); toast('Error: '+e.message); }
+});
 
 function addExercise(){
   const name=edName.value.trim(); if(!name){ edName.focus(); return; }
   DAYS[dayIdx].exercises.push({n:name,tag:MUSCLES[edMuscle.value],m:[edMuscle.value],id:makeId()});
-  persistDay(); edName.value=''; renderList();
+  setSyncDot('busy');
+  dbSaveDay(DAYS[dayIdx].id, DAYS[dayIdx].exercises)
+    .then(()=>{ setSyncDot('ok'); })
+    .catch(e=>{ setSyncDot('err'); toast('Save failed: '+e.message); });
+  edName.value=''; renderList();
 }
 document.getElementById('edAdd').addEventListener('click',addExercise);
 edName.addEventListener('keydown',e=>{ if(e.key==='Enter') addExercise(); });
 
-/* ── Boot: open IndexedDB, hydrate mediaKeys, then render ──────── */
-idb.keys().then(keys=>{
-  mediaKeys=keys;
+/* ── BOOT — load all days from Supabase, fall back to defaults ─── */
+async function boot(){
+  setSyncDot('busy');
+  try{
+    // load each day; if not in DB yet, use defaults and save them
+    const dayData = await Promise.all(
+      DEFAULT_DAYS.map(async def=>{
+        let exercises = await dbLoadDay(def.id);
+        if(!exercises){
+          // first run — seed with defaults
+          exercises = def.exercises.map(e=>({...e,m:[...e.m],id:makeId()}));
+          await dbSaveDay(def.id, exercises);
+        }
+        return {...def, exercises};
+      })
+    );
+    DAYS = dayData;
+
+    // hydrate mediaMap from media_url stored on each exercise
+    DAYS.forEach(d=>d.exercises.forEach(ex=>{
+      if(ex.media_url) mediaMap.set(ex.id, ex.media_url);
+    }));
+
+    setSyncDot('ok');
+  }catch(e){
+    setSyncDot('err');
+    toast('Could not reach Supabase — check your connection', 4000);
+    // fall back to defaults so the UI still works
+    DAYS = DEFAULT_DAYS.map(d=>({...d,exercises:d.exercises.map(e=>({...e,m:[...e.m],id:makeId()}))}));
+  }
+
+  buildTabs();
   setDay(0);
   document.getElementById('loading').remove();
-}).catch(()=>{
-  setDay(0);
-  document.getElementById('loading').remove();
-});
+}
+
+boot();
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-
 let lastTouch=0;
 document.addEventListener('touchend',e=>{
   const now=Date.now(); if(now-lastTouch<350) e.preventDefault(); lastTouch=now;
