@@ -16,312 +16,152 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0e1013;
-    --panel:#15191f;
-    --panel-2:#181d24;
-    --line:#232a33;
-    --bone:#ece7dd;
-    --dim:#8b94a1;
-    --plate:#262d37;
-    --plate-edge:#11151a;
-    --ember:#ff4d2e;
-    --ember-soft:#ff6a3d;
-    --ember-dim:rgba(255,77,46,.16);
+    --bg:#0e1013; --panel:#15191f; --panel-2:#181d24;
+    --line:#232a33; --bone:#ece7dd; --dim:#8b94a1;
+    --ember:#ff4d2e; --ember-soft:#ff6a3d; --ember-dim:rgba(255,77,46,.16);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{
-    background:var(--bg);
-    color:var(--bone);
-    font-family:'Inter',system-ui,sans-serif;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
+  html,body{min-height:100%}
+  body{background:var(--bg);color:var(--bone);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   ::selection{background:var(--ember);color:#0e1013}
 
-  /* ---------- header ---------- */
-  header{
-    padding:26px 22px 14px;
-    border-bottom:1px solid var(--line);
-  }
-  .kicker{
-    font-family:'Barlow Condensed';
-    font-weight:600;letter-spacing:.32em;
-    font-size:11px;color:var(--ember);
-    text-transform:uppercase;
-  }
-  h1{
-    font-family:'Anton';
-    font-size:clamp(34px,7vw,58px);
-    letter-spacing:.01em;
-    line-height:1;
-    margin-top:6px;
-    text-transform:uppercase;
-  }
+  /* header */
+  header{padding:24px 20px 14px;border-bottom:1px solid var(--line)}
+  .kicker{font-family:'Barlow Condensed';font-weight:600;letter-spacing:.32em;font-size:11px;color:var(--ember);text-transform:uppercase}
+  h1{font-family:'Anton';font-size:clamp(30px,7vw,52px);letter-spacing:.01em;line-height:1;margin-top:6px;text-transform:uppercase}
   h1 .thin{color:var(--dim)}
-  .sub{
-    margin-top:8px;color:var(--dim);
-    font-size:13px;max-width:520px;line-height:1.5;
-  }
+  .sub{margin-top:6px;color:var(--dim);font-size:13px;line-height:1.5}
 
-  /* ---------- day tabs ---------- */
-  nav.days{
-    display:flex;gap:8px;
-    padding:14px 22px;
-    overflow-x:auto;
-    scrollbar-width:none;
-    border-bottom:1px solid var(--line);
-    position:sticky;top:0;background:var(--bg);z-index:30;
-  }
+  /* day tabs */
+  nav.days{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:30}
   nav.days::-webkit-scrollbar{display:none}
-  .day-tab{
-    flex:0 0 auto;
-    background:var(--panel);
-    border:1px solid var(--line);
-    color:var(--dim);
-    border-radius:10px;
-    padding:8px 14px 9px;
-    cursor:pointer;
-    font-family:'Barlow Condensed';
-    text-align:left;
-    transition:border-color .2s,color .2s,background .2s;
-  }
-  .day-tab .d{
-    display:block;font-size:10px;font-weight:600;
-    letter-spacing:.22em;text-transform:uppercase;
-  }
-  .day-tab .n{
-    display:block;font-size:17px;font-weight:700;
-    letter-spacing:.04em;text-transform:uppercase;color:var(--bone);
-    margin-top:1px;
-  }
-  .day-tab.active{
-    background:var(--ember-dim);
-    border-color:var(--ember);
-    color:var(--ember);
-  }
+  .day-tab{flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--dim);border-radius:10px;padding:8px 14px 9px;cursor:pointer;font-family:'Barlow Condensed';text-align:left;transition:border-color .2s,color .2s,background .2s}
+  .day-tab .d{display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase}
+  .day-tab .n{display:block;font-size:17px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--bone);margin-top:1px}
+  .day-tab.active{background:var(--ember-dim);border-color:var(--ember);color:var(--ember)}
   .day-tab.active .n{color:var(--ember)}
   .day-tab:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 
-  /* ---------- layout ---------- */
-  main{
-    max-width:680px;
-    margin:0 auto;
-  }
+  /* layout */
+  main{max-width:680px;margin:0 auto}
 
-  /* ---------- demo bottom sheet ---------- */
+  /* session */
+  .session{padding:20px 20px 60px}
+  .session-head h2{font-family:'Anton';font-size:clamp(24px,4.4vw,38px);text-transform:uppercase;letter-spacing:.015em;line-height:1.05}
+  .session-head .focus{color:var(--ember)}
+  .meta{display:flex;gap:12px;margin-top:8px;font-family:'Barlow Condensed';font-size:12px;font-weight:600;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;align-items:center;flex-wrap:wrap}
+  .meta b{color:var(--bone);font-weight:700;margin-right:3px}
+
+  /* edit button */
+  .edit-btn{margin-left:auto;font-family:'Barlow Condensed';font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;background:none;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 13px;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+  .edit-btn:hover{color:var(--ember);border-color:var(--ember)}
+  .edit-btn.on{background:var(--ember);border-color:var(--ember);color:#0e1013}
+  .edit-btn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+  /* add-exercise panel */
+  .editor{margin-top:16px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .ed-grid{display:grid;grid-template-columns:1fr 180px;gap:8px}
+  @media(max-width:480px){.ed-grid{grid-template-columns:1fr}}
+  .editor input,.editor select{background:var(--bg);border:1px solid var(--line);color:var(--bone);border-radius:9px;padding:11px 12px;font-family:'Inter';font-size:14px;width:100%}
+  .editor input:focus,.editor select:focus{outline:none;border-color:var(--ember)}
+  .ed-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .ed-actions button{font-family:'Barlow Condensed';font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;border-radius:999px;padding:9px 16px;cursor:pointer;border:1px solid var(--line);background:none;color:var(--bone);transition:color .2s,border-color .2s,background .2s}
+  .ed-add{background:var(--ember)!important;border-color:var(--ember)!important;color:#0e1013!important}
+  .ed-add:hover{background:var(--ember-soft)!important}
+  .ed-reset:hover,.ed-done:hover{color:var(--ember);border-color:var(--ember)}
+  .ed-actions button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+  /* exercise list */
+  .ex-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+  .empty{border:1px dashed var(--line);border-radius:12px;padding:26px 16px;text-align:center;color:var(--dim);font-size:13px}
+
+  /* exercise row — normal mode */
+  .ex{
+    display:grid;grid-template-columns:44px 1fr auto auto;
+    align-items:center;gap:10px;
+    background:var(--panel);border:1px solid var(--line);border-left:3px solid transparent;
+    border-radius:12px;padding:13px 14px 13px 12px;
+    cursor:pointer;text-align:left;width:100%;color:var(--bone);
+    transition:border-color .2s,background .2s;
+  }
+  .ex:hover{border-color:#36404d}
+  .ex:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+  .ex .num{font-family:'Anton';font-size:20px;color:#3c4654;text-align:center;line-height:1}
+  .ex .info{min-width:0}
+  .ex .name{font-family:'Barlow Condensed';font-weight:600;font-size:18px;letter-spacing:.02em;line-height:1.15}
+  .ex .tag{font-family:'Barlow Condensed';font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+  .ex .play-dot{
+    width:32px;height:32px;border-radius:999px;border:1px solid var(--line);
+    display:grid;place-items:center;font-size:11px;color:var(--ember);flex-shrink:0;
+    transition:border-color .2s;
+  }
+  .ex:hover .play-dot{border-color:var(--ember)}
+  .ex.has-demo{border-left-color:var(--ember-dim)}
+  .ex.no-demo .play-dot{color:#3c4654;border-style:dashed;font-size:9px}
+
+  /* exercise row — edit mode */
+  .ex.editing{grid-template-columns:44px 1fr auto auto auto;cursor:default}
+  .ex.editing:hover{border-color:var(--line)}
+
+  /* upload button (edit mode) */
+  .up-btn{
+    width:32px;height:32px;border-radius:999px;
+    border:1px solid var(--line);background:none;
+    color:var(--dim);font-size:15px;line-height:1;
+    cursor:pointer;display:grid;place-items:center;flex-shrink:0;
+    transition:color .2s,border-color .2s;position:relative;
+  }
+  .up-btn:hover{color:var(--ember);border-color:var(--ember)}
+  .up-btn.has-media{border-color:var(--ember);color:var(--ember)}
+  .up-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+  .up-btn:focus-within{outline:2px solid var(--ember);outline-offset:2px}
+
+  /* remove button (edit mode) */
+  .rm{width:32px;height:32px;border-radius:999px;background:none;border:1px solid var(--line);color:var(--dim);font-size:17px;line-height:1;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:color .2s,border-color .2s}
+  .rm:hover{color:var(--ember);border-color:var(--ember)}
+  .rm:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+  /* uploading spinner */
+  .up-btn.loading::after{content:'';position:absolute;inset:3px;border-radius:999px;border:2px solid var(--ember);border-top-color:transparent;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* demo bottom sheet */
   .sheet-backdrop{
     position:fixed;inset:0;z-index:50;
-    background:rgba(6,8,11,.72);
-    backdrop-filter:blur(3px);
-    opacity:0;pointer-events:none;
-    transition:opacity .25s;
+    background:rgba(6,8,11,.75);backdrop-filter:blur(4px);
+    opacity:0;pointer-events:none;transition:opacity .22s;
     display:flex;align-items:flex-end;justify-content:center;
   }
   .sheet-backdrop.open{opacity:1;pointer-events:auto}
   .sheet{
     width:100%;max-width:560px;
-    background:var(--panel-2);
-    border:1px solid var(--line);
-    border-bottom:none;
+    background:var(--panel-2);border:1px solid var(--line);border-bottom:none;
     border-radius:22px 22px 0 0;
-    padding:10px 14px calc(20px + env(safe-area-inset-bottom));
-    transform:translateY(102%);
-    transition:transform .28s cubic-bezier(.22,1,.36,1);
+    padding:10px 14px calc(24px + env(safe-area-inset-bottom));
+    transform:translateY(104%);transition:transform .28s cubic-bezier(.22,1,.36,1);
   }
   .sheet-backdrop.open .sheet{transform:translateY(0)}
-  .sheet-grip{
-    width:42px;height:5px;border-radius:999px;
-    background:#39424e;margin:4px auto 12px;
-  }
-  .sheet-head{
-    display:flex;align-items:flex-start;justify-content:space-between;
-    gap:12px;margin-bottom:12px;
-  }
-  .sheet-title{
-    font-family:'Barlow Condensed';font-weight:700;
-    font-size:21px;line-height:1.1;letter-spacing:.01em;
-  }
-  .sheet-tag{
-    display:inline-block;margin-top:4px;
-    font-family:'Barlow Condensed';font-weight:600;
-    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--ember);
-  }
-  .sheet-close{
-    flex:0 0 auto;
-    width:34px;height:34px;border-radius:999px;
-    background:none;border:1px solid var(--line);
-    color:var(--dim);font-size:18px;line-height:1;
-    cursor:pointer;display:grid;place-items:center;
-    transition:color .2s,border-color .2s;
+  .sheet-grip{width:40px;height:5px;border-radius:999px;background:#39424e;margin:4px auto 14px}
+  .sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .sheet-title{font-family:'Barlow Condensed';font-weight:700;font-size:22px;line-height:1.1}
+  .sheet-tag{display:block;margin-top:3px;font-family:'Barlow Condensed';font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ember)}
+  .sheet-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
+  .sheet-close,.sheet-delete{
+    width:34px;height:34px;border-radius:999px;background:none;
+    border:1px solid var(--line);color:var(--dim);font-size:17px;
+    cursor:pointer;display:grid;place-items:center;transition:color .2s,border-color .2s;
   }
   .sheet-close:hover{color:var(--ember);border-color:var(--ember)}
-  .sheet-gif{
-    background:#fff;border-radius:14px;
-    display:flex;align-items:center;justify-content:center;
-    overflow:hidden;
-  }
-  .sheet-gif img{
-    width:100%;max-height:60vh;object-fit:contain;display:block;
-  }
+  .sheet-delete:hover{color:#e05555;border-color:#e05555}
 
-  /* ---------- session panel ---------- */
-  .session{padding:22px 22px 40px;min-width:0}
-  .session-head h2{
-    font-family:'Anton';
-    font-size:clamp(26px,4.4vw,40px);
-    text-transform:uppercase;letter-spacing:.015em;
-    line-height:1.05;
-  }
-  .session-head .focus{
-    color:var(--ember);
-  }
-  .meta{
-    display:flex;gap:14px;margin-top:8px;
-    font-family:'Barlow Condensed';font-size:12px;font-weight:600;
-    letter-spacing:.18em;color:var(--dim);text-transform:uppercase;
-  }
-  .meta b{color:var(--bone);font-weight:700;margin-right:4px}
+  /* media display */
+  .sheet-media{background:#111;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:180px}
+  .sheet-media img{width:100%;max-height:58vh;object-fit:contain;display:block}
+  .sheet-media video{width:100%;max-height:58vh;display:block;border-radius:14px}
 
-  .ex-list{margin-top:18px;display:flex;flex-direction:column;gap:8px}
-  .ex{
-    display:grid;
-    grid-template-columns:46px 1fr auto;
-    align-items:center;gap:12px;
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-left:3px solid transparent;
-    border-radius:12px;
-    padding:13px 16px 13px 12px;
-    cursor:pointer;
-    text-align:left;width:100%;
-    color:var(--bone);
-    transition:border-color .2s,background .2s,transform .15s;
-  }
-  .ex:hover{border-color:#36404d}
-  .ex:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
-  .ex.active{
-    background:var(--panel-2);
-    border-color:var(--line);
-    border-left-color:var(--ember);
-    transform:translateX(2px);
-  }
-  .ex .num{
-    font-family:'Anton';font-size:21px;color:#3c4654;
-    text-align:center;line-height:1;
-  }
-  .ex.active .num{color:var(--ember)}
-  .ex .name{
-    font-family:'Barlow Condensed';font-weight:600;
-    font-size:18px;letter-spacing:.02em;line-height:1.15;
-  }
-  .ex .tag{
-    font-family:'Barlow Condensed';font-weight:600;
-    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--dim);
-    border:1px solid var(--line);
-    padding:4px 9px;border-radius:999px;
-    white-space:nowrap;
-  }
-  .ex.active .tag{color:var(--ember);border-color:var(--ember)}
-  .ex .play-dot{
-    flex:0 0 auto;
-    width:30px;height:30px;border-radius:999px;
-    border:1px solid var(--line);
-    display:grid;place-items:center;
-    font-size:11px;color:var(--ember);
-    transition:border-color .2s,background .2s,color .2s;
-  }
-  .ex:hover .play-dot{border-color:var(--ember)}
-  .ex.no-demo .play-dot{color:#3c4654;border-style:dashed}
+  footer{border-top:1px solid var(--line);padding:16px 20px 24px;color:#525c6a;font-size:11.5px;text-align:center}
 
-  /* ---------- edit mode ---------- */
-  .edit-btn{
-    margin-left:auto;
-    font-family:'Barlow Condensed';font-weight:700;
-    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-    background:none;color:var(--dim);
-    border:1px solid var(--line);border-radius:999px;
-    padding:5px 13px;cursor:pointer;
-    transition:color .2s,border-color .2s,background .2s;
-  }
-  .edit-btn:hover{color:var(--ember);border-color:var(--ember)}
-  .edit-btn.on{background:var(--ember);border-color:var(--ember);color:#0e1013}
-  .edit-btn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
-  .ex.editing{grid-template-columns:46px 1fr auto 34px;cursor:default}
-  .ex.editing:hover{border-color:var(--line)}
-  .rm{
-    width:30px;height:30px;border-radius:999px;
-    background:none;border:1px solid var(--line);
-    color:var(--dim);font-size:17px;line-height:1;
-    cursor:pointer;display:grid;place-items:center;
-    transition:color .2s,border-color .2s;
-  }
-  .rm:hover{color:var(--ember);border-color:var(--ember)}
-  .rm:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
-  .empty{
-    border:1px dashed var(--line);border-radius:12px;
-    padding:26px 16px;text-align:center;color:var(--dim);
-    font-size:13px;
-  }
-  .editor{
-    margin-top:16px;
-    background:var(--panel-2);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:14px;
-  }
-  .ed-grid{display:grid;grid-template-columns:1fr 200px;gap:8px}
-  .editor input,.editor select{
-    background:var(--bg);
-    border:1px solid var(--line);
-    color:var(--bone);
-    border-radius:9px;
-    padding:11px 12px;
-    font-family:'Inter';font-size:14px;
-    width:100%;
-  }
-  .editor input:focus,.editor select:focus{
-    outline:none;border-color:var(--ember);
-  }
-  .ed-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-  .ed-actions button{
-    font-family:'Barlow Condensed';font-weight:700;
-    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
-    border-radius:999px;padding:9px 16px;cursor:pointer;
-    border:1px solid var(--line);background:none;color:var(--bone);
-    transition:color .2s,border-color .2s,background .2s;
-  }
-  .ed-add{background:var(--ember)!important;border-color:var(--ember)!important;color:#0e1013!important}
-  .ed-add:hover{background:var(--ember-soft)!important}
-  .ed-reset:hover{color:var(--ember);border-color:var(--ember)}
-  .ed-done:hover{color:var(--ember);border-color:var(--ember)}
-  .ed-actions button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
-  .ed-hint{
-    margin-top:10px;color:var(--dim);font-size:11.5px;line-height:1.5;
-  }
-  .ed-hint span{color:var(--bone);font-family:ui-monospace,monospace;font-size:11px}
-  @media (max-width:560px){
-    .ed-grid{grid-template-columns:1fr}
-  }
-
-  footer{
-    border-top:1px solid var(--line);
-    padding:18px 22px 26px;color:#525c6a;
-    font-size:11.5px;letter-spacing:.04em;
-    text-align:center;
-  }
-
-  /* ---------- responsive ---------- */
-  @media (max-width:560px){
-    header{padding:22px 18px 12px}
-    .session{padding:18px 16px 40px}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .ex,.ex.active{transition:none;transform:none}
-    .sheet{transition:none}
-  }
+  @media(prefers-reduced-motion:reduce){.sheet{transition:none}.ex{transition:none}}
 </style>
 </head>
 <body>
@@ -329,7 +169,7 @@
 <header>
   <div class="kicker">High-Volume Bodybuilding Program</div>
   <h1>The Split <span class="thin">/ 5-Day PPL A·B</span></h1>
-  <p class="sub">Your full week, one tap away. Open a day, tap any exercise with a ▶ to watch the demo.</p>
+  <p class="sub">Tap any exercise to see its demo. In Edit mode, upload your own GIF, image, or video.</p>
 </header>
 
 <nav class="days" id="dayTabs" aria-label="Training days"></nav>
@@ -345,6 +185,7 @@
         <button class="edit-btn" id="editBtn" aria-pressed="false">✎ Edit</button>
       </div>
     </div>
+
     <div class="editor" id="editor" hidden>
       <div class="ed-grid">
         <input id="edName" type="text" placeholder="Exercise name (e.g. Pec Deck Fly)" maxlength="60" autocomplete="off">
@@ -352,17 +193,18 @@
       </div>
       <div class="ed-actions">
         <button class="ed-add" id="edAdd">＋ Add exercise</button>
-        <button class="ed-reset" id="edReset">Reset day to default</button>
+        <button class="ed-reset" id="edReset">Reset to default</button>
         <button class="ed-done" id="edDone">Done</button>
       </div>
-      <p class="ed-hint">The muscle you pick becomes the exercise tag. Add a demo by saving <span id="edSlugHint">gifs/&lt;name&gt;.gif</span></p>
     </div>
+
     <div class="ex-list" id="exList" role="list"></div>
   </section>
 </main>
 
 <footer>Train hard, recover harder. Built for the 5-day PPL A·B rotation.</footer>
 
+<!-- demo sheet -->
 <div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <div class="sheet-grip"></div>
@@ -371,317 +213,354 @@
         <div class="sheet-title" id="sheetTitle"></div>
         <span class="sheet-tag" id="sheetTag"></span>
       </div>
-      <button class="sheet-close" id="sheetClose" aria-label="Close demo">×</button>
+      <div class="sheet-actions">
+        <button class="sheet-delete" id="sheetDelete" title="Remove demo" aria-label="Remove demo">🗑</button>
+        <button class="sheet-close" id="sheetClose" aria-label="Close">×</button>
+      </div>
     </div>
-    <div class="sheet-gif">
-      <img id="sheetImg" alt="Exercise demonstration" decoding="async">
-    </div>
+    <div class="sheet-media" id="sheetMedia"></div>
   </div>
 </div>
 
 <script>
-/* ------------ data ------------ */
-/* muscle keys: upperChest midChest lowerChest frontDelt sideDelt rearDelt
-   biceps forearm triceps traps upperBack lats lowerBack
-   quads hams glutes calves */
+/* ── DATA ─────────────────────────────────────────────────────── */
 const DEFAULT_DAYS = [
-  {
-    id:"pushA", day:"Mon", short:"Push A", title:"Push A", focus:"Chest",
-    exercises:[
-      {n:"DB Chest Press", tag:"Mid Chest", m:["midChest"], g:"db-chest-press"},
-      {n:"Incline Barbell Press", tag:"Upper Chest", m:["upperChest"], g:"incline-barbell-press"},
-      {n:"Machine Shoulder Press", tag:"Shoulders", m:["frontDelt","sideDelt"], g:"machine-shoulder-press"},
-      {n:"Seated Cable Fly", tag:"Mid Chest", m:["midChest"], g:"seated-cable-fly"},
-      {n:"Cable Lateral Raise", tag:"Side Delt", m:["sideDelt"], g:"cable-lateral-raise"},
-      {n:"High-to-Low Cable Fly", tag:"Lower Chest", m:["lowerChest"], g:"high-to-low-cable-fly"},
-      {n:"Cable Front Raise (Behind → Forward)", tag:"Front Delt", m:["frontDelt"], g:"cable-front-raise"},
-      {n:"Straight Bar Cable Pushdown", tag:"Triceps", m:["triceps"], g:"straight-bar-pushdown"},
-      {n:"Cable Rope Overhead Extension", tag:"Triceps", m:["triceps"], g:"rope-overhead-extension"}
-    ]
-  },
-  {
-    id:"pullA", day:"Tue", short:"Pull A", title:"Pull A", focus:"Lats & Width",
-    exercises:[
-      {n:"Lat Pulldown", tag:"Lats", m:["lats"], g:"lat-pulldown"},
-      {n:"Machine Row", tag:"Upper Back", m:["upperBack"], g:"machine-row"},
-      {n:"Wide Grip Cable Row", tag:"Upper Back", m:["upperBack"], g:"wide-grip-cable-row"},
-      {n:"Cable Lats Pullover", tag:"Lats", m:["lats"], g:"cable-lats-pullover"},
-      {n:"DB Shrugs", tag:"Traps", m:["traps"], g:"db-shrugs"},
-      {n:"DB Preacher Curl", tag:"Bicep · Short Head", m:["biceps"], g:"db-preacher-curl"},
-      {n:"Bayesian Curl", tag:"Bicep · Long Head", m:["biceps"], g:"bayesian-curl"},
-      {n:"Rope Hammer Curl", tag:"Brachialis", m:["forearm","biceps"], g:"rope-hammer-curl"}
-    ]
-  },
-  {
-    id:"legs", day:"Wed", short:"Legs", title:"Legs", focus:"Full Lower",
-    exercises:[
-      {n:"Squats", tag:"Quads · Glutes", m:["quads","glutes"], g:"squats"},
-      {n:"Leg Press", tag:"Quads", m:["quads"], g:"leg-press"},
-      {n:"Stiff Leg Deadlift", tag:"Hamstrings", m:["hams","glutes"], g:"stiff-leg-deadlift"},
-      {n:"Hip Thrust", tag:"Glutes", m:["glutes"], g:"hip-thrust"},
-      {n:"Leg Curl", tag:"Hamstrings", m:["hams"], g:"leg-curl"},
-      {n:"Leg Extension", tag:"Quads", m:["quads"], g:"leg-extension"}
-    ]
-  },
-  {
-    id:"pushB", day:"Thu", short:"Push B", title:"Push B", focus:"Shoulders",
-    exercises:[
-      {n:"Seated DB Shoulder Press", tag:"Shoulders", m:["frontDelt","sideDelt"], g:"seated-db-shoulder-press"},
-      {n:"Machine Chest Press", tag:"Mid Chest", m:["midChest"], g:"machine-chest-press"},
-      {n:"Supported DB Lateral Raise", tag:"Side Delt", m:["sideDelt"], g:"supported-db-lateral-raise"},
-      {n:"Incline Upper Chest Cable Fly", tag:"Upper Chest", m:["upperChest"], g:"incline-cable-fly"},
-      {n:"Angled Side Lateral DB Raise", tag:"Side Delt", m:["sideDelt"], g:"angled-lateral-raise"},
-      {n:"Lower Chest Fly", tag:"Lower Chest", m:["lowerChest"], g:"lower-chest-fly"},
-      {n:"Cable Rear Reverse Fly", tag:"Rear Delt", m:["rearDelt"], g:"cable-rear-fly"},
-      {n:"Supported EZ Bar Pushdown", tag:"Triceps", m:["triceps"], g:"ez-bar-pushdown"},
-      {n:"Barbell Supported Skull Crusher", tag:"Triceps", m:["triceps"], g:"skull-crusher"},
-      {n:"Single Arm Cable Pushdown", tag:"Triceps", m:["triceps"], g:"single-arm-pushdown"}
-    ]
-  },
-  {
-    id:"pullB", day:"Fri", short:"Pull B", title:"Pull B", focus:"Thickness & Rows",
-    exercises:[
-      {n:"Supported Smith Machine Row", tag:"Upper Back", m:["upperBack"], g:"smith-machine-row"},
-      {n:"Single Arm Seated Pulldown", tag:"Upper Back", m:["upperBack","lats"], g:"single-arm-pulldown"},
-      {n:"Close Grip Cable Row", tag:"Lower Back", m:["lowerBack","lats"], g:"close-grip-cable-row"},
-      {n:"Close Grip T-Bar Row", tag:"Mid Back", m:["upperBack","lats"], g:"t-bar-row"},
-      {n:"Reverse Close Grip Cable Row", tag:"Lower Back", m:["lowerBack","lats"], g:"reverse-close-grip-row"},
-      {n:"Cable Bar Raise (From Behind)", tag:"Bicep · Short Head", m:["biceps"], g:"cable-bar-raise-behind"},
-      {n:"Incline DB Curl", tag:"Bicep · Long Head", m:["biceps"], g:"incline-db-curl"},
-      {n:"Single Arm Cable Hammer Curl", tag:"Brachialis", m:["forearm","biceps"], g:"single-arm-hammer-curl"}
-    ]
-  }
+  {id:"pushA",day:"Mon",short:"Push A",title:"Push A",focus:"Chest",exercises:[
+    {n:"DB Chest Press",tag:"Mid Chest",m:["midChest"]},
+    {n:"Incline Barbell Press",tag:"Upper Chest",m:["upperChest"]},
+    {n:"Machine Shoulder Press",tag:"Shoulders",m:["frontDelt","sideDelt"]},
+    {n:"Seated Cable Fly",tag:"Mid Chest",m:["midChest"]},
+    {n:"Cable Lateral Raise",tag:"Side Delt",m:["sideDelt"]},
+    {n:"High-to-Low Cable Fly",tag:"Lower Chest",m:["lowerChest"]},
+    {n:"Cable Front Raise (Behind → Forward)",tag:"Front Delt",m:["frontDelt"]},
+    {n:"Straight Bar Cable Pushdown",tag:"Triceps",m:["triceps"]},
+    {n:"Cable Rope Overhead Extension",tag:"Triceps",m:["triceps"]}
+  ]},
+  {id:"pullA",day:"Tue",short:"Pull A",title:"Pull A",focus:"Lats & Width",exercises:[
+    {n:"Lat Pulldown",tag:"Lats",m:["lats"]},
+    {n:"Machine Row",tag:"Upper Back",m:["upperBack"]},
+    {n:"Wide Grip Cable Row",tag:"Upper Back",m:["upperBack"]},
+    {n:"Cable Lats Pullover",tag:"Lats",m:["lats"]},
+    {n:"DB Shrugs",tag:"Traps",m:["traps"]},
+    {n:"DB Preacher Curl",tag:"Bicep · Short Head",m:["biceps"]},
+    {n:"Bayesian Curl",tag:"Bicep · Long Head",m:["biceps"]},
+    {n:"Rope Hammer Curl",tag:"Brachialis",m:["forearm","biceps"]}
+  ]},
+  {id:"legs",day:"Wed",short:"Legs",title:"Legs",focus:"Full Lower",exercises:[
+    {n:"Squats",tag:"Quads · Glutes",m:["quads","glutes"]},
+    {n:"Leg Press",tag:"Quads",m:["quads"]},
+    {n:"Stiff Leg Deadlift",tag:"Hamstrings",m:["hams","glutes"]},
+    {n:"Hip Thrust",tag:"Glutes",m:["glutes"]},
+    {n:"Leg Curl",tag:"Hamstrings",m:["hams"]},
+    {n:"Leg Extension",tag:"Quads",m:["quads"]}
+  ]},
+  {id:"pushB",day:"Thu",short:"Push B",title:"Push B",focus:"Shoulders",exercises:[
+    {n:"Seated DB Shoulder Press",tag:"Shoulders",m:["frontDelt","sideDelt"]},
+    {n:"Machine Chest Press",tag:"Mid Chest",m:["midChest"]},
+    {n:"Supported DB Lateral Raise",tag:"Side Delt",m:["sideDelt"]},
+    {n:"Incline Upper Chest Cable Fly",tag:"Upper Chest",m:["upperChest"]},
+    {n:"Angled Side Lateral DB Raise",tag:"Side Delt",m:["sideDelt"]},
+    {n:"Lower Chest Fly",tag:"Lower Chest",m:["lowerChest"]},
+    {n:"Cable Rear Reverse Fly",tag:"Rear Delt",m:["rearDelt"]},
+    {n:"Supported EZ Bar Pushdown",tag:"Triceps",m:["triceps"]},
+    {n:"Barbell Supported Skull Crusher",tag:"Triceps",m:["triceps"]},
+    {n:"Single Arm Cable Pushdown",tag:"Triceps",m:["triceps"]}
+  ]},
+  {id:"pullB",day:"Fri",short:"Pull B",title:"Pull B",focus:"Thickness & Rows",exercises:[
+    {n:"Supported Smith Machine Row",tag:"Upper Back",m:["upperBack"]},
+    {n:"Single Arm Seated Pulldown",tag:"Upper Back",m:["upperBack","lats"]},
+    {n:"Close Grip Cable Row",tag:"Lower Back",m:["lowerBack","lats"]},
+    {n:"Close Grip T-Bar Row",tag:"Mid Back",m:["upperBack","lats"]},
+    {n:"Reverse Close Grip Cable Row",tag:"Lower Back",m:["lowerBack","lats"]},
+    {n:"Cable Bar Raise (From Behind)",tag:"Bicep · Short Head",m:["biceps"]},
+    {n:"Incline DB Curl",tag:"Bicep · Long Head",m:["biceps"]},
+    {n:"Single Arm Cable Hammer Curl",tag:"Brachialis",m:["forearm","biceps"]}
+  ]}
 ];
 
-/* ------------ on-device customisation ------------ */
-const STORE_KEY = 'ppl-custom-v1';
+/* ── STORAGE ──────────────────────────────────────────────────── */
+const EX_KEY   = 'ppl-custom-v1';    // exercise lists per day
+const MEDIA_KEY = 'ppl-media-v1';    // { exId: { dataUrl, type } }
+
 const MUSCLES = {
-  upperChest:'Upper Chest', midChest:'Mid Chest', lowerChest:'Lower Chest',
-  frontDelt:'Front Delt', sideDelt:'Side Delt', rearDelt:'Rear Delt',
-  biceps:'Biceps', forearm:'Brachialis / Forearm', triceps:'Triceps',
-  traps:'Traps', upperBack:'Upper Back', lats:'Lats', lowerBack:'Lower Back',
-  quads:'Quads', hams:'Hamstrings', glutes:'Glutes', calves:'Calves'
+  upperChest:'Upper Chest',midChest:'Mid Chest',lowerChest:'Lower Chest',
+  frontDelt:'Front Delt',sideDelt:'Side Delt',rearDelt:'Rear Delt',
+  biceps:'Biceps',forearm:'Brachialis / Forearm',triceps:'Triceps',
+  traps:'Traps',upperBack:'Upper Back',lats:'Lats',lowerBack:'Lower Back',
+  quads:'Quads',hams:'Hamstrings',glutes:'Glutes',calves:'Calves'
 };
+
+function loadJSON(key){ try{ return JSON.parse(localStorage.getItem(key))||{}; }catch(e){ return {}; } }
+function saveJSON(key,val){ try{ localStorage.setItem(key,JSON.stringify(val)); }catch(e){
+  if(e.name==='QuotaExceededError') alert('Storage full — your device may not have enough space for this media file. Try a smaller file.');
+}}
+
+let custom    = loadJSON(EX_KEY);
+let mediaStore= loadJSON(MEDIA_KEY);
+
 function cloneDefaults(){
-  return DEFAULT_DAYS.map(d => ({...d, exercises: d.exercises.map(e => ({...e, m:[...e.m]}))}));
+  return DEFAULT_DAYS.map(d=>({...d,exercises:d.exercises.map(e=>({...e,m:[...e.m],id:e.id||makeId()}))}));
 }
-function loadCustom(){
-  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
-  catch(e){ return {}; }
-}
-let custom = loadCustom();
+function makeId(){ return Math.random().toString(36).slice(2,9); }
+
 const DAYS = cloneDefaults();
-DAYS.forEach(d => { if (Array.isArray(custom[d.id])) d.exercises = custom[d.id]; });
+DAYS.forEach(d=>{ if(Array.isArray(custom[d.id])) d.exercises=custom[d.id]; });
+// ensure every exercise has an id (for existing stored data)
+DAYS.forEach(d=>d.exercises.forEach(e=>{ if(!e.id) e.id=makeId(); }));
 
 function persistDay(){
-  custom[DAYS[dayIdx].id] = DAYS[dayIdx].exercises;
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(custom)); } catch(e){}
+  custom[DAYS[dayIdx].id]=DAYS[dayIdx].exercises;
+  saveJSON(EX_KEY,custom);
 }
 function resetDay(){
-  const d = DAYS[dayIdx];
+  const d=DAYS[dayIdx];
+  // clear media for this day's exercises
+  d.exercises.forEach(e=>{ delete mediaStore[e.id]; });
+  saveJSON(MEDIA_KEY,mediaStore);
   delete custom[d.id];
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(custom)); } catch(e){}
-  d.exercises = cloneDefaults().find(x => x.id === d.id).exercises;
+  saveJSON(EX_KEY,custom);
+  d.exercises=cloneDefaults().find(x=>x.id===d.id).exercises;
   setDay(dayIdx);
-  editMode = true; enterEditUI();
+  editMode=true; enterEditUI();
 }
-function slugify(s){
-  return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40) || 'exercise';
+function slugify(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'exercise'; }
+
+/* ── MEDIA HELPERS ────────────────────────────────────────────── */
+function hasMedia(exId){ return !!(mediaStore[exId] && mediaStore[exId].dataUrl); }
+function getMedia(exId){ return mediaStore[exId]||null; }
+
+function saveMedia(exId, dataUrl, type){
+  mediaStore[exId]={ dataUrl, type };
+  saveJSON(MEDIA_KEY, mediaStore);
+}
+function removeMedia(exId){
+  delete mediaStore[exId];
+  saveJSON(MEDIA_KEY, mediaStore);
 }
 
-/* ------------ state ------------ */
-let dayIdx = 0, editMode = false;
-
-/* ------------ dom ------------ */
-const tabsEl = document.getElementById('dayTabs');
-const listEl = document.getElementById('exList');
-const titleEl = document.getElementById('dayTitle');
-const tagEl = document.getElementById('dayTag');
-const dowEl = document.getElementById('dayDow');
-const countEl = document.getElementById('exCount');
-const backdrop = document.getElementById('sheetBackdrop');
-const sheetImg = document.getElementById('sheetImg');
-const sheetTitle = document.getElementById('sheetTitle');
-const sheetTag = document.getElementById('sheetTag');
-
-/* ------------ gif existence cache ------------ */
-/* probe each slug once; remember yes/no so rows can show a demo dot.
-   resolves to true/false, never rejects. */
-const gifStatus = new Map();
-function checkGif(slug){
-  if(!slug) return Promise.resolve(false);
-  if(gifStatus.has(slug)) return gifStatus.get(slug);
-  const p = new Promise(res=>{
-    const img = new Image();
-    img.onload = ()=>res(true);
-    img.onerror = ()=>res(false);
-    img.src = 'gifs/' + slug + '.gif';
+function readFileAsDataURL(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result);
+    r.onerror=()=>rej(r.error);
+    r.readAsDataURL(file);
   });
-  gifStatus.set(slug, p);
-  return p;
 }
 
-/* ------------ demo sheet ------------ */
+/* ── STATE ────────────────────────────────────────────────────── */
+let dayIdx=0, editMode=false;
+let sheetExId=null; // which exercise the open sheet belongs to
+
+/* ── DOM REFS ─────────────────────────────────────────────────── */
+const tabsEl    = document.getElementById('dayTabs');
+const listEl    = document.getElementById('exList');
+const titleEl   = document.getElementById('dayTitle');
+const tagEl     = document.getElementById('dayTag');
+const dowEl     = document.getElementById('dayDow');
+const countEl   = document.getElementById('exCount');
+const backdrop  = document.getElementById('sheetBackdrop');
+const sheetMedia= document.getElementById('sheetMedia');
+const sheetTitleEl = document.getElementById('sheetTitle');
+const sheetTagEl   = document.getElementById('sheetTag');
+const sheetDeleteBtn = document.getElementById('sheetDelete');
+
+/* ── SHEET ────────────────────────────────────────────────────── */
 function openSheet(ex){
-  sheetTitle.textContent = ex.n;
-  sheetTag.textContent = ex.tag;
-  sheetImg.src = 'gifs/' + ex.g + '.gif';
+  sheetExId=ex.id;
+  sheetTitleEl.textContent=ex.n;
+  sheetTagEl.textContent=ex.tag;
+  renderSheetMedia(ex.id);
   backdrop.classList.add('open');
   backdrop.setAttribute('aria-hidden','false');
+}
+function renderSheetMedia(exId){
+  const m=getMedia(exId);
+  sheetMedia.innerHTML='';
+  if(!m){ sheetMedia.innerHTML='<div style="padding:40px;text-align:center;color:#525c6a;font-family:\'Barlow Condensed\';letter-spacing:.1em;font-size:13px">NO DEMO ADDED YET</div>'; return; }
+  if(m.type.startsWith('video/')){
+    const v=document.createElement('video');
+    v.src=m.dataUrl; v.controls=true; v.loop=true; v.playsInline=true; v.autoplay=true;
+    sheetMedia.appendChild(v);
+  } else {
+    const img=document.createElement('img');
+    img.src=m.dataUrl; img.alt='Exercise demo';
+    sheetMedia.appendChild(img);
+  }
 }
 function closeSheet(){
   backdrop.classList.remove('open');
   backdrop.setAttribute('aria-hidden','true');
-  sheetImg.src = '';
+  // pause any video to stop audio
+  const v=sheetMedia.querySelector('video');
+  if(v) v.pause();
+  sheetExId=null;
 }
-document.getElementById('sheetClose').addEventListener('click', closeSheet);
-backdrop.addEventListener('click', e=>{ if(e.target === backdrop) closeSheet(); });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSheet(); });
+sheetDeleteBtn.addEventListener('click',()=>{
+  if(!sheetExId) return;
+  if(!confirm('Remove this demo?')) return;
+  removeMedia(sheetExId);
+  closeSheet();
+  renderList(); // refresh dots
+});
+document.getElementById('sheetClose').addEventListener('click',closeSheet);
+backdrop.addEventListener('click',e=>{ if(e.target===backdrop) closeSheet(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSheet(); });
 
-/* ------------ tabs ------------ */
+/* ── TABS ─────────────────────────────────────────────────────── */
 DAYS.forEach((d,i)=>{
-  const b = document.createElement('button');
-  b.className = 'day-tab';
-  b.innerHTML = `<span class="d">${d.day}</span><span class="n">${d.short}</span>`;
-  b.addEventListener('click', ()=>{ setDay(i); });
+  const b=document.createElement('button');
+  b.className='day-tab';
+  b.innerHTML=`<span class="d">${d.day}</span><span class="n">${d.short}</span>`;
+  b.addEventListener('click',()=>setDay(i));
   tabsEl.appendChild(b);
 });
 
-/* ------------ render ------------ */
+/* ── RENDER ───────────────────────────────────────────────────── */
 function setDay(i){
-  dayIdx = i;
-  const d = DAYS[i];
-  [...tabsEl.children].forEach((t,k)=>t.classList.toggle('active', k===i));
-  const parts = d.title.split(' ');
-  titleEl.innerHTML = parts.length>1
-    ? `${parts[0]} <span class="focus">${parts.slice(1).join(' ')}</span>`
-    : `<span class="focus">${d.title}</span>`;
-  tagEl.textContent = d.focus;
-  dowEl.textContent = ({Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday'})[d.day];
+  dayIdx=i;
+  const d=DAYS[i];
+  [...tabsEl.children].forEach((t,k)=>t.classList.toggle('active',k===i));
+  const parts=d.title.split(' ');
+  titleEl.innerHTML=parts.length>1
+    ?`${parts[0]} <span class="focus">${parts.slice(1).join(' ')}</span>`
+    :`<span class="focus">${d.title}</span>`;
+  tagEl.textContent=d.focus;
+  dowEl.textContent=({Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday'})[d.day];
   renderList();
 }
 
-function esc(s){
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function renderList(){
-  const d = DAYS[dayIdx];
-  countEl.textContent = d.exercises.length;
-  listEl.innerHTML = '';
+  const d=DAYS[dayIdx];
+  countEl.textContent=d.exercises.length;
+  listEl.innerHTML='';
   if(!d.exercises.length){
-    const empty = document.createElement('div');
-    empty.className = 'empty';
-    empty.textContent = 'No exercises in this day. Tap Edit to add one.';
-    listEl.appendChild(empty);
+    const el=document.createElement('div');
+    el.className='empty';
+    el.textContent='No exercises. Tap Edit to add one.';
+    listEl.appendChild(el);
     return;
   }
   d.exercises.forEach((ex,k)=>{
+    const row=document.createElement(editMode?'div':'button');
+    const has=hasMedia(ex.id);
+
     if(editMode){
-      const row = document.createElement('div');
-      row.className = 'ex editing';
-      row.innerHTML = `<span class="num">${String(k+1).padStart(2,'0')}</span>
-        <span class="name">${esc(ex.n)}</span>
-        <span class="tag">${esc(ex.tag)}</span>`;
-      const rm = document.createElement('button');
-      rm.className = 'rm';
-      rm.setAttribute('aria-label', `Remove ${ex.n}`);
-      rm.textContent = '×';
-      rm.addEventListener('click', ()=>{
+      row.className='ex editing';
+      row.innerHTML=`
+        <span class="num">${String(k+1).padStart(2,'0')}</span>
+        <span class="info">
+          <span class="name">${esc(ex.n)}</span>
+          <span class="tag">${esc(ex.tag)}</span>
+        </span>`;
+
+      // upload button
+      const upBtn=document.createElement('label');
+      upBtn.className='up-btn'+(has?' has-media':'');
+      upBtn.title=has?'Replace demo':'Add demo';
+      upBtn.setAttribute('aria-label', has?'Replace demo for '+ex.n:'Add demo for '+ex.n);
+      upBtn.innerHTML=has?'✦':'＋';
+      const fileInput=document.createElement('input');
+      fileInput.type='file';
+      fileInput.accept='image/*,video/*,.gif';
+      fileInput.addEventListener('change',async()=>{
+        const file=fileInput.files[0];
+        if(!file) return;
+        upBtn.classList.add('loading');
+        upBtn.innerHTML='';
+        try{
+          const dataUrl=await readFileAsDataURL(file);
+          saveMedia(ex.id, dataUrl, file.type||'image/gif');
+          renderList();
+        }catch(err){
+          alert('Could not load file: '+err.message);
+          upBtn.classList.remove('loading');
+          renderList();
+        }
+      });
+      upBtn.appendChild(fileInput);
+      row.appendChild(upBtn);
+
+      // remove button
+      const rm=document.createElement('button');
+      rm.className='rm';
+      rm.setAttribute('aria-label','Remove '+ex.n);
+      rm.textContent='×';
+      rm.addEventListener('click',()=>{
+        removeMedia(ex.id);
         d.exercises.splice(k,1);
         persistDay();
         renderList();
       });
       row.appendChild(rm);
-      listEl.appendChild(row);
+
     } else {
-      const row = document.createElement('button');
-      row.className = 'ex no-demo'; row.setAttribute('role','listitem');
-      row.innerHTML = `<span class="num">${String(k+1).padStart(2,'0')}</span>
-        <span class="name">${esc(ex.n)}</span>
-        <span class="tag">${esc(ex.tag)}</span>
-        <span class="play-dot" aria-hidden="true">▶</span>`;
-      /* probe the gif; only open the sheet if one exists */
-      checkGif(ex.g).then(has=>{
-        row.classList.toggle('no-demo', !has);
-        row.dataset.hasDemo = has ? '1' : '';
-      });
-      row.addEventListener('click', ()=>{
-        if(row.dataset.hasDemo) openSheet(ex);
-        /* no demo: row does nothing, no error shown */
-      });
-      listEl.appendChild(row);
+      row.setAttribute('role','listitem');
+      row.className='ex '+(has?'has-demo':'no-demo');
+      row.innerHTML=`
+        <span class="num">${String(k+1).padStart(2,'0')}</span>
+        <span class="info">
+          <span class="name">${esc(ex.n)}</span>
+          <span class="tag">${esc(ex.tag)}</span>
+        </span>
+        <span class="tag" style="white-space:nowrap">${esc(ex.tag)}</span>
+        <span class="play-dot" aria-hidden="true">${has?'▶':'·'}</span>`;
+      row.addEventListener('click',()=>{ if(has) openSheet(ex); });
     }
+    listEl.appendChild(row);
   });
 }
 
-setDay(0);
-
-/* ------------ edit mode wiring ------------ */
-const editBtn = document.getElementById('editBtn');
+/* ── EDIT MODE ────────────────────────────────────────────────── */
+const editBtn  = document.getElementById('editBtn');
 const editorEl = document.getElementById('editor');
-const edName = document.getElementById('edName');
+const edName   = document.getElementById('edName');
 const edMuscle = document.getElementById('edMuscle');
-const edSlugHint = document.getElementById('edSlugHint');
 
 Object.entries(MUSCLES).forEach(([key,label])=>{
-  const o = document.createElement('option');
-  o.value = key; o.textContent = label;
+  const o=document.createElement('option');
+  o.value=key; o.textContent=label;
   edMuscle.appendChild(o);
 });
 
 function enterEditUI(){
-  editBtn.classList.toggle('on', editMode);
-  editBtn.setAttribute('aria-pressed', String(editMode));
-  editBtn.textContent = editMode ? '✓ Done' : '✎ Edit';
-  editorEl.hidden = !editMode;
+  editBtn.classList.toggle('on',editMode);
+  editBtn.setAttribute('aria-pressed',String(editMode));
+  editBtn.textContent=editMode?'✓ Done':'✎ Edit';
+  editorEl.hidden=!editMode;
   renderList();
 }
-editBtn.addEventListener('click', ()=>{
-  editMode = !editMode;
-  enterEditUI();
+editBtn.addEventListener('click',()=>{
+  editMode=!editMode; enterEditUI();
   if(editMode) edName.focus();
 });
-document.getElementById('edDone').addEventListener('click', ()=>{
-  editMode = false; enterEditUI();
-});
-document.getElementById('edReset').addEventListener('click', ()=>{
-  if(confirm('Reset this day to the original program?')) resetDay();
-});
-edName.addEventListener('input', ()=>{
-  edSlugHint.textContent = 'gifs/' + slugify(edName.value || '<name>') + '.gif';
-});
+document.getElementById('edDone').addEventListener('click',()=>{ editMode=false; enterEditUI(); });
+document.getElementById('edReset').addEventListener('click',()=>{ if(confirm('Reset this day to the original program?')) resetDay(); });
+
 function addExercise(){
-  const name = edName.value.trim();
+  const name=edName.value.trim();
   if(!name){ edName.focus(); return; }
-  const mKey = edMuscle.value;
-  const slug = slugify(name);
-  gifStatus.delete(slug);   /* re-probe in case a gif was just added */
-  DAYS[dayIdx].exercises.push({
-    n: name,
-    tag: MUSCLES[mKey],
-    m: [mKey],
-    g: slug
-  });
+  const mKey=edMuscle.value;
+  DAYS[dayIdx].exercises.push({ n:name, tag:MUSCLES[mKey], m:[mKey], id:makeId() });
   persistDay();
-  edName.value = '';
-  edSlugHint.textContent = 'gifs/<name>.gif';
+  edName.value='';
   renderList();
 }
-document.getElementById('edAdd').addEventListener('click', addExercise);
-edName.addEventListener('keydown', e=>{ if(e.key==='Enter') addExercise(); });
+document.getElementById('edAdd').addEventListener('click',addExercise);
+edName.addEventListener('keydown',e=>{ if(e.key==='Enter') addExercise(); });
 
-/* PWA: offline support */
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
-/* prevent iOS double-tap zoom on rapid taps */
-let lastTouch = 0;
-document.addEventListener('touchend', e => {
-  const now = Date.now();
-  if (now - lastTouch < 350) e.preventDefault();
-  lastTouch = now;
-}, {passive:false});
+/* ── INIT ─────────────────────────────────────────────────────── */
+setDay(0);
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+let lastTouch=0;
+document.addEventListener('touchend',e=>{
+  const now=Date.now();
+  if(now-lastTouch<350) e.preventDefault();
+  lastTouch=now;
+},{passive:false});
 </script>
 </body>
 </html>
