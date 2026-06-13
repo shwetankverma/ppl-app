@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>The Split — 5-Day PPL A·B</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0e1013">
@@ -15,161 +15,125 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0e1013; --panel:#15191f; --panel-2:#181d24;
-    --line:#232a33; --bone:#ece7dd; --dim:#8b94a1;
-    --ember:#ff4d2e; --ember-soft:#ff6a3d; --ember-dim:rgba(255,77,46,.16);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{min-height:100%}
-  body{background:var(--bg);color:var(--bone);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  ::selection{background:var(--ember);color:#0e1013}
+:root{
+  --bg:#0e1013;--panel:#15191f;--panel-2:#181d24;
+  --line:#232a33;--bone:#ece7dd;--dim:#8b94a1;
+  --ember:#ff4d2e;--ember-soft:#ff6a3d;--ember-dim:rgba(255,77,46,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--bone);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--ember);color:#0e1013}
 
-  /* header */
-  header{padding:24px 20px 14px;border-bottom:1px solid var(--line)}
-  .kicker{font-family:'Barlow Condensed';font-weight:600;letter-spacing:.32em;font-size:11px;color:var(--ember);text-transform:uppercase}
-  h1{font-family:'Anton';font-size:clamp(30px,7vw,52px);letter-spacing:.01em;line-height:1;margin-top:6px;text-transform:uppercase}
-  h1 .thin{color:var(--dim)}
-  .sub{margin-top:6px;color:var(--dim);font-size:13px;line-height:1.5}
+/* loading overlay */
+#loading{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:99;font-family:'Barlow Condensed';font-size:13px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
 
-  /* day tabs */
-  nav.days{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:30}
-  nav.days::-webkit-scrollbar{display:none}
-  .day-tab{flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--dim);border-radius:10px;padding:8px 14px 9px;cursor:pointer;font-family:'Barlow Condensed';text-align:left;transition:border-color .2s,color .2s,background .2s}
-  .day-tab .d{display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase}
-  .day-tab .n{display:block;font-size:17px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--bone);margin-top:1px}
-  .day-tab.active{background:var(--ember-dim);border-color:var(--ember);color:var(--ember)}
-  .day-tab.active .n{color:var(--ember)}
-  .day-tab:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+/* header */
+header{padding:24px 20px 14px;border-bottom:1px solid var(--line)}
+.kicker{font-family:'Barlow Condensed';font-weight:600;letter-spacing:.32em;font-size:11px;color:var(--ember);text-transform:uppercase}
+h1{font-family:'Anton';font-size:clamp(30px,7vw,52px);letter-spacing:.01em;line-height:1;margin-top:6px;text-transform:uppercase}
+h1 .thin{color:var(--dim)}
+.sub{margin-top:6px;color:var(--dim);font-size:13px;line-height:1.5}
 
-  /* layout */
-  main{max-width:680px;margin:0 auto}
+/* day tabs */
+nav.days{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:30}
+nav.days::-webkit-scrollbar{display:none}
+.day-tab{flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--dim);border-radius:10px;padding:8px 14px 9px;cursor:pointer;font-family:'Barlow Condensed';text-align:left;transition:border-color .2s,color .2s,background .2s}
+.day-tab .d{display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase}
+.day-tab .n{display:block;font-size:17px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--bone);margin-top:1px}
+.day-tab.active{background:var(--ember-dim);border-color:var(--ember)}
+.day-tab.active .n,.day-tab.active .d{color:var(--ember)}
+.day-tab:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 
-  /* session */
-  .session{padding:20px 20px 60px}
-  .session-head h2{font-family:'Anton';font-size:clamp(24px,4.4vw,38px);text-transform:uppercase;letter-spacing:.015em;line-height:1.05}
-  .session-head .focus{color:var(--ember)}
-  .meta{display:flex;gap:12px;margin-top:8px;font-family:'Barlow Condensed';font-size:12px;font-weight:600;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;align-items:center;flex-wrap:wrap}
-  .meta b{color:var(--bone);font-weight:700;margin-right:3px}
+/* layout */
+main{max-width:680px;margin:0 auto}
+.session{padding:20px 20px 60px}
+.session-head h2{font-family:'Anton';font-size:clamp(24px,4.4vw,38px);text-transform:uppercase;letter-spacing:.015em;line-height:1.05}
+.session-head .focus{color:var(--ember)}
+.meta{display:flex;gap:12px;margin-top:8px;font-family:'Barlow Condensed';font-size:12px;font-weight:600;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;align-items:center;flex-wrap:wrap}
+.meta b{color:var(--bone);font-weight:700;margin-right:3px}
 
-  /* edit button */
-  .edit-btn{margin-left:auto;font-family:'Barlow Condensed';font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;background:none;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 13px;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
-  .edit-btn:hover{color:var(--ember);border-color:var(--ember)}
-  .edit-btn.on{background:var(--ember);border-color:var(--ember);color:#0e1013}
-  .edit-btn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+/* edit button */
+.edit-btn{margin-left:auto;font-family:'Barlow Condensed';font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;background:none;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 13px;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+.edit-btn:hover{color:var(--ember);border-color:var(--ember)}
+.edit-btn.on{background:var(--ember);border-color:var(--ember);color:#0e1013}
 
-  /* add-exercise panel */
-  .editor{margin-top:16px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px}
-  .ed-grid{display:grid;grid-template-columns:1fr 180px;gap:8px}
-  @media(max-width:480px){.ed-grid{grid-template-columns:1fr}}
-  .editor input,.editor select{background:var(--bg);border:1px solid var(--line);color:var(--bone);border-radius:9px;padding:11px 12px;font-family:'Inter';font-size:14px;width:100%}
-  .editor input:focus,.editor select:focus{outline:none;border-color:var(--ember)}
-  .ed-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-  .ed-actions button{font-family:'Barlow Condensed';font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;border-radius:999px;padding:9px 16px;cursor:pointer;border:1px solid var(--line);background:none;color:var(--bone);transition:color .2s,border-color .2s,background .2s}
-  .ed-add{background:var(--ember)!important;border-color:var(--ember)!important;color:#0e1013!important}
-  .ed-add:hover{background:var(--ember-soft)!important}
-  .ed-reset:hover,.ed-done:hover{color:var(--ember);border-color:var(--ember)}
-  .ed-actions button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+/* add panel */
+.editor{margin-top:16px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px}
+.ed-grid{display:grid;grid-template-columns:1fr 180px;gap:8px}
+@media(max-width:480px){.ed-grid{grid-template-columns:1fr}}
+.editor input,.editor select{background:var(--bg);border:1px solid var(--line);color:var(--bone);border-radius:9px;padding:11px 12px;font-family:'Inter';font-size:14px;width:100%}
+.editor input:focus,.editor select:focus{outline:none;border-color:var(--ember)}
+.ed-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ed-actions button{font-family:'Barlow Condensed';font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;border-radius:999px;padding:9px 16px;cursor:pointer;border:1px solid var(--line);background:none;color:var(--bone);transition:color .2s,border-color .2s,background .2s}
+.ed-add{background:var(--ember)!important;border-color:var(--ember)!important;color:#0e1013!important}
+.ed-add:hover{background:var(--ember-soft)!important}
+.ed-reset:hover,.ed-done:hover{color:var(--ember);border-color:var(--ember)}
 
-  /* exercise list */
-  .ex-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
-  .empty{border:1px dashed var(--line);border-radius:12px;padding:26px 16px;text-align:center;color:var(--dim);font-size:13px}
+/* exercise list */
+.ex-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.empty{border:1px dashed var(--line);border-radius:12px;padding:26px 16px;text-align:center;color:var(--dim);font-size:13px}
 
-  /* exercise row — normal mode */
-  .ex{
-    display:grid;grid-template-columns:44px 1fr auto auto;
-    align-items:center;gap:10px;
-    background:var(--panel);border:1px solid var(--line);border-left:3px solid transparent;
-    border-radius:12px;padding:13px 14px 13px 12px;
-    cursor:pointer;text-align:left;width:100%;color:var(--bone);
-    transition:border-color .2s,background .2s;
-  }
-  .ex:hover{border-color:#36404d}
-  .ex:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
-  .ex .num{font-family:'Anton';font-size:20px;color:#3c4654;text-align:center;line-height:1}
-  .ex .info{min-width:0}
-  .ex .name{font-family:'Barlow Condensed';font-weight:600;font-size:18px;letter-spacing:.02em;line-height:1.15}
-  .ex .tag{font-family:'Barlow Condensed';font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
-  .ex .play-dot{
-    width:32px;height:32px;border-radius:999px;border:1px solid var(--line);
-    display:grid;place-items:center;font-size:11px;color:var(--ember);flex-shrink:0;
-    transition:border-color .2s;
-  }
-  .ex:hover .play-dot{border-color:var(--ember)}
-  .ex.has-demo{border-left-color:var(--ember-dim)}
-  .ex.no-demo .play-dot{color:#3c4654;border-style:dashed;font-size:9px}
+/* exercise row — normal */
+.ex{display:grid;grid-template-columns:44px 1fr 32px;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-left:3px solid transparent;border-radius:12px;padding:13px 14px 13px 12px;cursor:pointer;text-align:left;width:100%;color:var(--bone);transition:border-color .2s,background .2s}
+.ex:hover{border-color:#36404d}
+.ex:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+.ex.has-demo{border-left-color:var(--ember)}
+.ex.no-demo{cursor:default}
+.ex .num{font-family:'Anton';font-size:20px;color:#3c4654;text-align:center;line-height:1}
+.ex .info .name{display:block;font-family:'Barlow Condensed';font-weight:600;font-size:18px;letter-spacing:.02em;line-height:1.15}
+.ex .info .tag{display:block;font-family:'Barlow Condensed';font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:2px}
+.play-dot{width:32px;height:32px;border-radius:999px;border:1px solid var(--line);display:grid;place-items:center;font-size:13px;color:#3c4654;flex-shrink:0;transition:border-color .2s,color .2s}
+.ex.has-demo .play-dot{color:var(--ember);border-color:var(--ember)}
+.ex.has-demo:hover .play-dot{background:var(--ember-dim)}
 
-  /* exercise row — edit mode */
-  .ex.editing{grid-template-columns:44px 1fr auto auto auto;cursor:default}
-  .ex.editing:hover{border-color:var(--line)}
+/* exercise row — edit mode */
+.ex.editing{grid-template-columns:44px 1fr 32px 32px;cursor:default}
+.ex.editing:hover{border-color:var(--line)}
 
-  /* upload button (edit mode) */
-  .up-btn{
-    width:32px;height:32px;border-radius:999px;
-    border:1px solid var(--line);background:none;
-    color:var(--dim);font-size:15px;line-height:1;
-    cursor:pointer;display:grid;place-items:center;flex-shrink:0;
-    transition:color .2s,border-color .2s;position:relative;
-  }
-  .up-btn:hover{color:var(--ember);border-color:var(--ember)}
-  .up-btn.has-media{border-color:var(--ember);color:var(--ember)}
-  .up-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-  .up-btn:focus-within{outline:2px solid var(--ember);outline-offset:2px}
+/* upload button */
+.up-btn{width:32px;height:32px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--dim);font-size:16px;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:color .2s,border-color .2s;position:relative;overflow:hidden}
+.up-btn:hover{color:var(--ember);border-color:var(--ember)}
+.up-btn.has-media{border-color:var(--ember);color:var(--ember)}
+.up-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0}
+.up-btn.loading{pointer-events:none}
+.up-btn.loading::after{content:'';position:absolute;inset:4px;border-radius:999px;border:2px solid var(--ember);border-top-color:transparent;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  /* remove button (edit mode) */
-  .rm{width:32px;height:32px;border-radius:999px;background:none;border:1px solid var(--line);color:var(--dim);font-size:17px;line-height:1;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:color .2s,border-color .2s}
-  .rm:hover{color:var(--ember);border-color:var(--ember)}
-  .rm:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+/* remove button */
+.rm{width:32px;height:32px;border-radius:999px;background:none;border:1px solid var(--line);color:var(--dim);font-size:17px;line-height:1;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:color .2s,border-color .2s}
+.rm:hover{color:#e05555;border-color:#e05555}
 
-  /* uploading spinner */
-  .up-btn.loading::after{content:'';position:absolute;inset:3px;border-radius:999px;border:2px solid var(--ember);border-top-color:transparent;animation:spin .7s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
+/* bottom sheet */
+.sheet-backdrop{position:fixed;inset:0;z-index:50;background:rgba(6,8,11,.75);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .22s;display:flex;align-items:flex-end;justify-content:center}
+.sheet-backdrop.open{opacity:1;pointer-events:auto}
+.sheet{width:100%;max-width:560px;background:var(--panel-2);border:1px solid var(--line);border-bottom:none;border-radius:22px 22px 0 0;padding:10px 14px calc(24px + env(safe-area-inset-bottom));transform:translateY(104%);transition:transform .28s cubic-bezier(.22,1,.36,1)}
+.sheet-backdrop.open .sheet{transform:translateY(0)}
+.sheet-grip{width:40px;height:5px;border-radius:999px;background:#39424e;margin:4px auto 14px}
+.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.sheet-title{font-family:'Barlow Condensed';font-weight:700;font-size:22px;line-height:1.1}
+.sheet-tag{display:block;margin-top:3px;font-family:'Barlow Condensed';font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ember)}
+.sheet-btns{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.sheet-close,.sheet-del{width:34px;height:34px;border-radius:999px;background:none;border:1px solid var(--line);color:var(--dim);font-size:17px;cursor:pointer;display:grid;place-items:center;transition:color .2s,border-color .2s}
+.sheet-close:hover{color:var(--ember);border-color:var(--ember)}
+.sheet-del:hover{color:#e05555;border-color:#e05555}
+.sheet-media{background:#111;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:160px}
+.sheet-media img{width:100%;max-height:58vh;object-fit:contain;display:block}
+.sheet-media video{width:100%;max-height:58vh;display:block}
+.sheet-empty{padding:40px;text-align:center;color:#525c6a;font-family:'Barlow Condensed';letter-spacing:.1em;font-size:13px;text-transform:uppercase}
 
-  /* demo bottom sheet */
-  .sheet-backdrop{
-    position:fixed;inset:0;z-index:50;
-    background:rgba(6,8,11,.75);backdrop-filter:blur(4px);
-    opacity:0;pointer-events:none;transition:opacity .22s;
-    display:flex;align-items:flex-end;justify-content:center;
-  }
-  .sheet-backdrop.open{opacity:1;pointer-events:auto}
-  .sheet{
-    width:100%;max-width:560px;
-    background:var(--panel-2);border:1px solid var(--line);border-bottom:none;
-    border-radius:22px 22px 0 0;
-    padding:10px 14px calc(24px + env(safe-area-inset-bottom));
-    transform:translateY(104%);transition:transform .28s cubic-bezier(.22,1,.36,1);
-  }
-  .sheet-backdrop.open .sheet{transform:translateY(0)}
-  .sheet-grip{width:40px;height:5px;border-radius:999px;background:#39424e;margin:4px auto 14px}
-  .sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
-  .sheet-title{font-family:'Barlow Condensed';font-weight:700;font-size:22px;line-height:1.1}
-  .sheet-tag{display:block;margin-top:3px;font-family:'Barlow Condensed';font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ember)}
-  .sheet-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
-  .sheet-close,.sheet-delete{
-    width:34px;height:34px;border-radius:999px;background:none;
-    border:1px solid var(--line);color:var(--dim);font-size:17px;
-    cursor:pointer;display:grid;place-items:center;transition:color .2s,border-color .2s;
-  }
-  .sheet-close:hover{color:var(--ember);border-color:var(--ember)}
-  .sheet-delete:hover{color:#e05555;border-color:#e05555}
-
-  /* media display */
-  .sheet-media{background:#111;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:180px}
-  .sheet-media img{width:100%;max-height:58vh;object-fit:contain;display:block}
-  .sheet-media video{width:100%;max-height:58vh;display:block;border-radius:14px}
-
-  footer{border-top:1px solid var(--line);padding:16px 20px 24px;color:#525c6a;font-size:11.5px;text-align:center}
-
-  @media(prefers-reduced-motion:reduce){.sheet{transition:none}.ex{transition:none}}
+footer{border-top:1px solid var(--line);padding:16px 20px 24px;color:#525c6a;font-size:11.5px;text-align:center}
+@media(prefers-reduced-motion:reduce){.sheet{transition:none}.ex{transition:none}}
 </style>
 </head>
 <body>
 
+<div id="loading">Loading…</div>
+
 <header>
   <div class="kicker">High-Volume Bodybuilding Program</div>
   <h1>The Split <span class="thin">/ 5-Day PPL A·B</span></h1>
-  <p class="sub">Tap any exercise to see its demo. In Edit mode, upload your own GIF, image, or video.</p>
+  <p class="sub">Tap any exercise with a ▶ to see its demo. In Edit mode, upload your own GIF, image, or video.</p>
 </header>
 
 <nav class="days" id="dayTabs" aria-label="Training days"></nav>
@@ -185,7 +149,6 @@
         <button class="edit-btn" id="editBtn" aria-pressed="false">✎ Edit</button>
       </div>
     </div>
-
     <div class="editor" id="editor" hidden>
       <div class="ed-grid">
         <input id="edName" type="text" placeholder="Exercise name (e.g. Pec Deck Fly)" maxlength="60" autocomplete="off">
@@ -197,14 +160,12 @@
         <button class="ed-done" id="edDone">Done</button>
       </div>
     </div>
-
     <div class="ex-list" id="exList" role="list"></div>
   </section>
 </main>
 
 <footer>Train hard, recover harder. Built for the 5-day PPL A·B rotation.</footer>
 
-<!-- demo sheet -->
 <div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <div class="sheet-grip"></div>
@@ -213,8 +174,8 @@
         <div class="sheet-title" id="sheetTitle"></div>
         <span class="sheet-tag" id="sheetTag"></span>
       </div>
-      <div class="sheet-actions">
-        <button class="sheet-delete" id="sheetDelete" title="Remove demo" aria-label="Remove demo">🗑</button>
+      <div class="sheet-btns">
+        <button class="sheet-del" id="sheetDel" title="Remove demo" aria-label="Remove demo">🗑</button>
         <button class="sheet-close" id="sheetClose" aria-label="Close">×</button>
       </div>
     </div>
@@ -223,7 +184,7 @@
 </div>
 
 <script>
-/* ── DATA ─────────────────────────────────────────────────────── */
+/* ── DATA ──────────────────────────────────────────────────────── */
 const DEFAULT_DAYS = [
   {id:"pushA",day:"Mon",short:"Push A",title:"Push A",focus:"Chest",exercises:[
     {n:"DB Chest Press",tag:"Mid Chest",m:["midChest"]},
@@ -232,7 +193,7 @@ const DEFAULT_DAYS = [
     {n:"Seated Cable Fly",tag:"Mid Chest",m:["midChest"]},
     {n:"Cable Lateral Raise",tag:"Side Delt",m:["sideDelt"]},
     {n:"High-to-Low Cable Fly",tag:"Lower Chest",m:["lowerChest"]},
-    {n:"Cable Front Raise (Behind → Forward)",tag:"Front Delt",m:["frontDelt"]},
+    {n:"Cable Front Raise (Behind to Forward)",tag:"Front Delt",m:["frontDelt"]},
     {n:"Straight Bar Cable Pushdown",tag:"Triceps",m:["triceps"]},
     {n:"Cable Rope Overhead Extension",tag:"Triceps",m:["triceps"]}
   ]},
@@ -242,12 +203,12 @@ const DEFAULT_DAYS = [
     {n:"Wide Grip Cable Row",tag:"Upper Back",m:["upperBack"]},
     {n:"Cable Lats Pullover",tag:"Lats",m:["lats"]},
     {n:"DB Shrugs",tag:"Traps",m:["traps"]},
-    {n:"DB Preacher Curl",tag:"Bicep · Short Head",m:["biceps"]},
-    {n:"Bayesian Curl",tag:"Bicep · Long Head",m:["biceps"]},
+    {n:"DB Preacher Curl",tag:"Bicep Short Head",m:["biceps"]},
+    {n:"Bayesian Curl",tag:"Bicep Long Head",m:["biceps"]},
     {n:"Rope Hammer Curl",tag:"Brachialis",m:["forearm","biceps"]}
   ]},
   {id:"legs",day:"Wed",short:"Legs",title:"Legs",focus:"Full Lower",exercises:[
-    {n:"Squats",tag:"Quads · Glutes",m:["quads","glutes"]},
+    {n:"Squats",tag:"Quads & Glutes",m:["quads","glutes"]},
     {n:"Leg Press",tag:"Quads",m:["quads"]},
     {n:"Stiff Leg Deadlift",tag:"Hamstrings",m:["hams","glutes"]},
     {n:"Hip Thrust",tag:"Glutes",m:["glutes"]},
@@ -272,15 +233,11 @@ const DEFAULT_DAYS = [
     {n:"Close Grip Cable Row",tag:"Lower Back",m:["lowerBack","lats"]},
     {n:"Close Grip T-Bar Row",tag:"Mid Back",m:["upperBack","lats"]},
     {n:"Reverse Close Grip Cable Row",tag:"Lower Back",m:["lowerBack","lats"]},
-    {n:"Cable Bar Raise (From Behind)",tag:"Bicep · Short Head",m:["biceps"]},
-    {n:"Incline DB Curl",tag:"Bicep · Long Head",m:["biceps"]},
+    {n:"Cable Bar Raise From Behind",tag:"Bicep Short Head",m:["biceps"]},
+    {n:"Incline DB Curl",tag:"Bicep Long Head",m:["biceps"]},
     {n:"Single Arm Cable Hammer Curl",tag:"Brachialis",m:["forearm","biceps"]}
   ]}
 ];
-
-/* ── STORAGE ──────────────────────────────────────────────────── */
-const EX_KEY   = 'ppl-custom-v1';    // exercise lists per day
-const MEDIA_KEY = 'ppl-media-v1';    // { exId: { dataUrl, type } }
 
 const MUSCLES = {
   upperChest:'Upper Chest',midChest:'Mid Chest',lowerChest:'Lower Chest',
@@ -290,22 +247,51 @@ const MUSCLES = {
   quads:'Quads',hams:'Hamstrings',glutes:'Glutes',calves:'Calves'
 };
 
-function loadJSON(key){ try{ return JSON.parse(localStorage.getItem(key))||{}; }catch(e){ return {}; } }
-function saveJSON(key,val){ try{ localStorage.setItem(key,JSON.stringify(val)); }catch(e){
-  if(e.name==='QuotaExceededError') alert('Storage full — your device may not have enough space for this media file. Try a smaller file.');
-}}
+/* ── IndexedDB — stores raw Blobs keyed by exercise id ─────────── */
+const DB_NAME = 'ppl-media', DB_VER = 1, IDB_STORE = 'media';
+let _db = null;
 
-let custom    = loadJSON(EX_KEY);
-let mediaStore= loadJSON(MEDIA_KEY);
-
-function cloneDefaults(){
-  return DEFAULT_DAYS.map(d=>({...d,exercises:d.exercises.map(e=>({...e,m:[...e.m],id:e.id||makeId()}))}));
+function openDB(){
+  if(_db) return Promise.resolve(_db);
+  return new Promise((res,rej)=>{
+    const r = indexedDB.open(DB_NAME, DB_VER);
+    r.onupgradeneeded = e => e.target.result.createObjectStore(IDB_STORE);
+    r.onsuccess = e => { _db = e.target.result; res(_db); };
+    r.onerror   = e => rej(e.target.error);
+  });
 }
-function makeId(){ return Math.random().toString(36).slice(2,9); }
+const idb = {
+  put(key, blob){ return openDB().then(db=>new Promise((res,rej)=>{ const tx=db.transaction(IDB_STORE,'readwrite'); tx.objectStore(IDB_STORE).put(blob,key); tx.oncomplete=res; tx.onerror=e=>rej(e.target.error); })); },
+  get(key){ return openDB().then(db=>new Promise((res,rej)=>{ const r=db.transaction(IDB_STORE,'readonly').objectStore(IDB_STORE).get(key); r.onsuccess=e=>res(e.target.result||null); r.onerror=e=>rej(e.target.error); })); },
+  del(key){ return openDB().then(db=>new Promise((res,rej)=>{ const tx=db.transaction(IDB_STORE,'readwrite'); tx.objectStore(IDB_STORE).delete(key); tx.oncomplete=res; tx.onerror=e=>rej(e.target.error); })); },
+  keys(){ return openDB().then(db=>new Promise((res,rej)=>{ const r=db.transaction(IDB_STORE,'readonly').objectStore(IDB_STORE).getAllKeys(); r.onsuccess=e=>res(new Set(e.target.result)); r.onerror=e=>rej(e.target.error); })); }
+};
 
+/* in-memory set of which exIds have stored media — hydrated on boot */
+let mediaKeys = new Set();
+function hasMedia(id){ return mediaKeys.has(id); }
+
+async function saveMedia(exId, blob){
+  await idb.put(exId, blob);
+  mediaKeys.add(exId);
+}
+async function deleteMedia(exId){
+  await idb.del(exId);
+  mediaKeys.delete(exId);
+}
+
+/* ── Exercise list — localStorage (tiny JSON, never evicted) ───── */
+const EX_KEY = 'ppl-custom-v1';
+function loadJSON(k){ try{ return JSON.parse(localStorage.getItem(k))||{}; }catch(e){ return {}; } }
+function saveJSON(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+let custom = loadJSON(EX_KEY);
+
+function makeId(){ return Math.random().toString(36).slice(2,9); }
+function cloneDefaults(){
+  return DEFAULT_DAYS.map(d=>({...d, exercises:d.exercises.map(e=>({...e,m:[...e.m],id:makeId()}))}));
+}
 const DAYS = cloneDefaults();
 DAYS.forEach(d=>{ if(Array.isArray(custom[d.id])) d.exercises=custom[d.id]; });
-// ensure every exercise has an id (for existing stored data)
 DAYS.forEach(d=>d.exercises.forEach(e=>{ if(!e.id) e.id=makeId(); }));
 
 function persistDay(){
@@ -314,99 +300,72 @@ function persistDay(){
 }
 function resetDay(){
   const d=DAYS[dayIdx];
-  // clear media for this day's exercises
-  d.exercises.forEach(e=>{ delete mediaStore[e.id]; });
-  saveJSON(MEDIA_KEY,mediaStore);
-  delete custom[d.id];
-  saveJSON(EX_KEY,custom);
-  d.exercises=cloneDefaults().find(x=>x.id===d.id).exercises;
-  setDay(dayIdx);
-  editMode=true; enterEditUI();
-}
-function slugify(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'exercise'; }
-
-/* ── MEDIA HELPERS ────────────────────────────────────────────── */
-function hasMedia(exId){ return !!(mediaStore[exId] && mediaStore[exId].dataUrl); }
-function getMedia(exId){ return mediaStore[exId]||null; }
-
-function saveMedia(exId, dataUrl, type){
-  mediaStore[exId]={ dataUrl, type };
-  saveJSON(MEDIA_KEY, mediaStore);
-}
-function removeMedia(exId){
-  delete mediaStore[exId];
-  saveJSON(MEDIA_KEY, mediaStore);
-}
-
-function readFileAsDataURL(file){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=()=>res(r.result);
-    r.onerror=()=>rej(r.error);
-    r.readAsDataURL(file);
+  Promise.all(d.exercises.map(e=>deleteMedia(e.id))).then(()=>{
+    delete custom[d.id]; saveJSON(EX_KEY,custom);
+    d.exercises=cloneDefaults().find(x=>x.id===d.id).exercises;
+    setDay(dayIdx); editMode=true; enterEditUI();
   });
 }
 
-/* ── STATE ────────────────────────────────────────────────────── */
-let dayIdx=0, editMode=false;
-let sheetExId=null; // which exercise the open sheet belongs to
+/* ── State ─────────────────────────────────────────────────────── */
+let dayIdx=0, editMode=false, sheetExId=null;
 
-/* ── DOM REFS ─────────────────────────────────────────────────── */
-const tabsEl    = document.getElementById('dayTabs');
-const listEl    = document.getElementById('exList');
-const titleEl   = document.getElementById('dayTitle');
-const tagEl     = document.getElementById('dayTag');
-const dowEl     = document.getElementById('dayDow');
-const countEl   = document.getElementById('exCount');
-const backdrop  = document.getElementById('sheetBackdrop');
-const sheetMedia= document.getElementById('sheetMedia');
+/* ── DOM ───────────────────────────────────────────────────────── */
+const tabsEl     = document.getElementById('dayTabs');
+const listEl     = document.getElementById('exList');
+const titleEl    = document.getElementById('dayTitle');
+const tagEl      = document.getElementById('dayTag');
+const dowEl      = document.getElementById('dayDow');
+const countEl    = document.getElementById('exCount');
+const backdrop   = document.getElementById('sheetBackdrop');
+const sheetMedia = document.getElementById('sheetMedia');
 const sheetTitleEl = document.getElementById('sheetTitle');
 const sheetTagEl   = document.getElementById('sheetTag');
-const sheetDeleteBtn = document.getElementById('sheetDelete');
 
-/* ── SHEET ────────────────────────────────────────────────────── */
+/* ── Bottom sheet ──────────────────────────────────────────────── */
+let objectURL = null;
+function revokeURL(){ if(objectURL){ URL.revokeObjectURL(objectURL); objectURL=null; } }
+
 function openSheet(ex){
   sheetExId=ex.id;
   sheetTitleEl.textContent=ex.n;
   sheetTagEl.textContent=ex.tag;
-  renderSheetMedia(ex.id);
+  sheetMedia.innerHTML='<div class="sheet-empty">Loading…</div>';
   backdrop.classList.add('open');
   backdrop.setAttribute('aria-hidden','false');
-}
-function renderSheetMedia(exId){
-  const m=getMedia(exId);
-  sheetMedia.innerHTML='';
-  if(!m){ sheetMedia.innerHTML='<div style="padding:40px;text-align:center;color:#525c6a;font-family:\'Barlow Condensed\';letter-spacing:.1em;font-size:13px">NO DEMO ADDED YET</div>'; return; }
-  if(m.type.startsWith('video/')){
-    const v=document.createElement('video');
-    v.src=m.dataUrl; v.controls=true; v.loop=true; v.playsInline=true; v.autoplay=true;
-    sheetMedia.appendChild(v);
-  } else {
-    const img=document.createElement('img');
-    img.src=m.dataUrl; img.alt='Exercise demo';
-    sheetMedia.appendChild(img);
-  }
+  idb.get(ex.id).then(blob=>{
+    revokeURL();
+    sheetMedia.innerHTML='';
+    if(!blob){ sheetMedia.innerHTML='<div class="sheet-empty">No demo yet</div>'; return; }
+    objectURL = URL.createObjectURL(blob);
+    if(blob.type.startsWith('video/')){
+      const v=document.createElement('video');
+      v.src=objectURL; v.controls=true; v.loop=true; v.playsInline=true; v.autoplay=true;
+      sheetMedia.appendChild(v);
+    } else {
+      const img=document.createElement('img');
+      img.src=objectURL; img.alt='Exercise demo';
+      sheetMedia.appendChild(img);
+    }
+  });
 }
 function closeSheet(){
   backdrop.classList.remove('open');
   backdrop.setAttribute('aria-hidden','true');
-  // pause any video to stop audio
   const v=sheetMedia.querySelector('video');
   if(v) v.pause();
+  setTimeout(()=>{ sheetMedia.innerHTML=''; revokeURL(); },300);
   sheetExId=null;
 }
-sheetDeleteBtn.addEventListener('click',()=>{
-  if(!sheetExId) return;
-  if(!confirm('Remove this demo?')) return;
-  removeMedia(sheetExId);
-  closeSheet();
-  renderList(); // refresh dots
+document.getElementById('sheetDel').addEventListener('click',()=>{
+  if(!sheetExId||!confirm('Remove this demo?')) return;
+  deleteMedia(sheetExId).then(()=>{ closeSheet(); renderList(); });
 });
 document.getElementById('sheetClose').addEventListener('click',closeSheet);
 backdrop.addEventListener('click',e=>{ if(e.target===backdrop) closeSheet(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSheet(); });
 
-/* ── TABS ─────────────────────────────────────────────────────── */
+/* ── Tabs ──────────────────────────────────────────────────────── */
 DAYS.forEach((d,i)=>{
   const b=document.createElement('button');
   b.className='day-tab';
@@ -415,7 +374,9 @@ DAYS.forEach((d,i)=>{
   tabsEl.appendChild(b);
 });
 
-/* ── RENDER ───────────────────────────────────────────────────── */
+/* ── Render ────────────────────────────────────────────────────── */
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 function setDay(i){
   dayIdx=i;
   const d=DAYS[i];
@@ -429,24 +390,19 @@ function setDay(i){
   renderList();
 }
 
-function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
 function renderList(){
   const d=DAYS[dayIdx];
   countEl.textContent=d.exercises.length;
   listEl.innerHTML='';
   if(!d.exercises.length){
     const el=document.createElement('div');
-    el.className='empty';
-    el.textContent='No exercises. Tap Edit to add one.';
-    listEl.appendChild(el);
-    return;
+    el.className='empty'; el.textContent='No exercises. Tap Edit to add one.';
+    listEl.appendChild(el); return;
   }
   d.exercises.forEach((ex,k)=>{
-    const row=document.createElement(editMode?'div':'button');
     const has=hasMedia(ex.id);
-
     if(editMode){
+      const row=document.createElement('div');
       row.className='ex editing';
       row.innerHTML=`
         <span class="num">${String(k+1).padStart(2,'0')}</span>
@@ -455,47 +411,38 @@ function renderList(){
           <span class="tag">${esc(ex.tag)}</span>
         </span>`;
 
-      // upload button
-      const upBtn=document.createElement('label');
-      upBtn.className='up-btn'+(has?' has-media':'');
-      upBtn.title=has?'Replace demo':'Add demo';
-      upBtn.setAttribute('aria-label', has?'Replace demo for '+ex.n:'Add demo for '+ex.n);
-      upBtn.innerHTML=has?'✦':'＋';
-      const fileInput=document.createElement('input');
-      fileInput.type='file';
-      fileInput.accept='image/*,video/*,.gif';
-      fileInput.addEventListener('change',async()=>{
-        const file=fileInput.files[0];
-        if(!file) return;
-        upBtn.classList.add('loading');
-        upBtn.innerHTML='';
+      /* upload label */
+      const lbl=document.createElement('label');
+      lbl.className='up-btn'+(has?' has-media':'');
+      lbl.title=has?'Replace demo':'Upload demo';
+      lbl.setAttribute('aria-label',(has?'Replace':'Upload')+' demo for '+ex.n);
+      lbl.innerHTML=has?'✦':'＋';
+      const inp=document.createElement('input');
+      inp.type='file'; inp.accept='image/*,video/*,.gif';
+      inp.addEventListener('change',async()=>{
+        const file=inp.files[0]; if(!file) return;
+        lbl.classList.add('loading'); lbl.querySelector('span,i,b')?.remove();
+        // clear icon text while spinner shows
+        [...lbl.childNodes].forEach(n=>{ if(n.nodeType===3) n.textContent=''; });
         try{
-          const dataUrl=await readFileAsDataURL(file);
-          saveMedia(ex.id, dataUrl, file.type||'image/gif');
+          await saveMedia(ex.id, file);
           renderList();
-        }catch(err){
-          alert('Could not load file: '+err.message);
-          upBtn.classList.remove('loading');
-          renderList();
-        }
+        }catch(err){ alert('Save failed: '+err.message); renderList(); }
       });
-      upBtn.appendChild(fileInput);
-      row.appendChild(upBtn);
+      lbl.appendChild(inp);
+      row.appendChild(lbl);
 
-      // remove button
+      /* remove button */
       const rm=document.createElement('button');
-      rm.className='rm';
-      rm.setAttribute('aria-label','Remove '+ex.n);
-      rm.textContent='×';
+      rm.className='rm'; rm.setAttribute('aria-label','Remove '+ex.n); rm.textContent='×';
       rm.addEventListener('click',()=>{
-        removeMedia(ex.id);
-        d.exercises.splice(k,1);
-        persistDay();
-        renderList();
+        deleteMedia(ex.id).then(()=>{ d.exercises.splice(k,1); persistDay(); renderList(); });
       });
       row.appendChild(rm);
+      listEl.appendChild(row);
 
     } else {
+      const row=document.createElement('button');
       row.setAttribute('role','listitem');
       row.className='ex '+(has?'has-demo':'no-demo');
       row.innerHTML=`
@@ -504,24 +451,21 @@ function renderList(){
           <span class="name">${esc(ex.n)}</span>
           <span class="tag">${esc(ex.tag)}</span>
         </span>
-        <span class="tag" style="white-space:nowrap">${esc(ex.tag)}</span>
         <span class="play-dot" aria-hidden="true">${has?'▶':'·'}</span>`;
-      row.addEventListener('click',()=>{ if(has) openSheet(ex); });
+      if(has) row.addEventListener('click',()=>openSheet(ex));
+      listEl.appendChild(row);
     }
-    listEl.appendChild(row);
   });
 }
 
-/* ── EDIT MODE ────────────────────────────────────────────────── */
+/* ── Edit mode ─────────────────────────────────────────────────── */
 const editBtn  = document.getElementById('editBtn');
 const editorEl = document.getElementById('editor');
 const edName   = document.getElementById('edName');
 const edMuscle = document.getElementById('edMuscle');
 
-Object.entries(MUSCLES).forEach(([key,label])=>{
-  const o=document.createElement('option');
-  o.value=key; o.textContent=label;
-  edMuscle.appendChild(o);
+Object.entries(MUSCLES).forEach(([k,v])=>{
+  const o=document.createElement('option'); o.value=k; o.textContent=v; edMuscle.appendChild(o);
 });
 
 function enterEditUI(){
@@ -531,35 +475,33 @@ function enterEditUI(){
   editorEl.hidden=!editMode;
   renderList();
 }
-editBtn.addEventListener('click',()=>{
-  editMode=!editMode; enterEditUI();
-  if(editMode) edName.focus();
-});
+editBtn.addEventListener('click',()=>{ editMode=!editMode; enterEditUI(); if(editMode) edName.focus(); });
 document.getElementById('edDone').addEventListener('click',()=>{ editMode=false; enterEditUI(); });
 document.getElementById('edReset').addEventListener('click',()=>{ if(confirm('Reset this day to the original program?')) resetDay(); });
 
 function addExercise(){
-  const name=edName.value.trim();
-  if(!name){ edName.focus(); return; }
-  const mKey=edMuscle.value;
-  DAYS[dayIdx].exercises.push({ n:name, tag:MUSCLES[mKey], m:[mKey], id:makeId() });
-  persistDay();
-  edName.value='';
-  renderList();
+  const name=edName.value.trim(); if(!name){ edName.focus(); return; }
+  DAYS[dayIdx].exercises.push({n:name,tag:MUSCLES[edMuscle.value],m:[edMuscle.value],id:makeId()});
+  persistDay(); edName.value=''; renderList();
 }
 document.getElementById('edAdd').addEventListener('click',addExercise);
 edName.addEventListener('keydown',e=>{ if(e.key==='Enter') addExercise(); });
 
-/* ── INIT ─────────────────────────────────────────────────────── */
-setDay(0);
+/* ── Boot: open IndexedDB, hydrate mediaKeys, then render ──────── */
+idb.keys().then(keys=>{
+  mediaKeys=keys;
+  setDay(0);
+  document.getElementById('loading').remove();
+}).catch(()=>{
+  setDay(0);
+  document.getElementById('loading').remove();
+});
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 let lastTouch=0;
 document.addEventListener('touchend',e=>{
-  const now=Date.now();
-  if(now-lastTouch<350) e.preventDefault();
-  lastTouch=now;
+  const now=Date.now(); if(now-lastTouch<350) e.preventDefault(); lastTouch=now;
 },{passive:false});
 </script>
 </body>
