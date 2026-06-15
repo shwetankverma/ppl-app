@@ -1,0 +1,11 @@
+name: PPL Deploy
+on:
+  push:
+    branches: main
+jobs:
+  ppl_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stamp SW version
+        shell: bash
+        run: sed -i "s/__TIMESTAMP__/$(date +%Y%m%d%H%M%S)/" ppl-app/sw.js
