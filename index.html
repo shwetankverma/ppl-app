@@ -101,9 +101,18 @@ main{max-width:680px;margin:0 auto}
 .ex.has-demo .play-dot{color:var(--ember);border-color:var(--ember)}
 .ex.has-demo:hover .play-dot{background:var(--ember-dim)}
 
-/* edit row */
-.ex.editing{grid-template-columns:44px 1fr 32px 32px;cursor:default}
+/* edit row — now 5 cols: handle | num | info | upload | remove */
+.ex.editing{grid-template-columns:28px 44px 1fr 32px 32px;cursor:default}
 .ex.editing:hover{border-color:var(--line)}
+
+/* drag handle */
+.drag-handle{display:flex;align-items:center;justify-content:center;cursor:grab;color:#3c4654;font-size:14px;user-select:none;touch-action:none;padding:4px;transition:color .15s}
+.drag-handle:active{cursor:grabbing;color:var(--ember)}
+.ex.drag-over{border-color:var(--ember);background:var(--panel-2);transform:scale(1.01)}
+.ex.dragging{opacity:.35;border-style:dashed}
+
+/* inline rename input */
+.rename-input{background:transparent;border:none;border-bottom:1px solid var(--ember);color:var(--bone);font-family:'Barlow Condensed';font-weight:600;font-size:18px;letter-spacing:.02em;line-height:1.15;width:100%;outline:none;padding:0 0 2px;caret-color:var(--ember)}
 
 /* upload btn */
 .up-btn{width:32px;height:32px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--dim);font-size:16px;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:color .2s,border-color .2s;position:relative;overflow:hidden}
@@ -464,12 +473,55 @@ function renderList(){
     if(editMode){
       const row=document.createElement('div');
       row.className='ex editing';
-      row.innerHTML=`
-        <span class="num">${String(k+1).padStart(2,'0')}</span>
-        <span class="info">
-          <span class="name">${esc(ex.n)}</span>
-          <span class="tag">${esc(ex.tag)}</span>
-        </span>`;
+      row.draggable=true;
+      row.dataset.idx=k;
+
+      /* drag handle */
+      const handle=document.createElement('div');
+      handle.className='drag-handle';
+      handle.innerHTML='&#9776;';
+      handle.setAttribute('aria-label','Drag to reorder');
+      row.appendChild(handle);
+
+      /* number */
+      const numEl=document.createElement('span');
+      numEl.className='num';
+      numEl.textContent=String(k+1).padStart(2,'0');
+      row.appendChild(numEl);
+
+      /* info — name is an inline editable input */
+      const infoEl=document.createElement('span');
+      infoEl.className='info';
+
+      const nameInput=document.createElement('input');
+      nameInput.className='rename-input';
+      nameInput.value=ex.n;
+      nameInput.setAttribute('aria-label','Exercise name');
+      nameInput.addEventListener('keydown',e=>{
+        if(e.key==='Enter'){ nameInput.blur(); return; }
+        if(e.key==='Escape'){ nameInput.value=ex.n; nameInput.blur(); }
+      });
+      nameInput.addEventListener('blur',async()=>{
+        const newName=nameInput.value.trim();
+        if(!newName){ nameInput.value=ex.n; return; }
+        if(newName===ex.n) return;
+        ex.n=newName;
+        // update sheet title if this exercise is open
+        if(sheetExId===ex.id) sheetTitleEl.textContent=newName;
+        setSyncDot('busy');
+        try{
+          await dbSaveDay(DAYS[dayIdx].id, DAYS[dayIdx].exercises);
+          setSyncDot('ok'); toast('Renamed ✓');
+          numEl.textContent=String(k+1).padStart(2,'0'); // refresh num label
+        }catch(e){ setSyncDot('err'); toast('Save failed: '+e.message); }
+      });
+      infoEl.appendChild(nameInput);
+
+      const tagSpan=document.createElement('span');
+      tagSpan.className='tag';
+      tagSpan.textContent=ex.tag;
+      infoEl.appendChild(tagSpan);
+      row.appendChild(infoEl);
 
       /* upload */
       const lbl=document.createElement('label');
@@ -528,6 +580,90 @@ function renderList(){
       listEl.appendChild(row);
     }
   });
+  if(editMode) initDrag();
+}
+
+/* ── DRAG-AND-DROP REORDER ──────────────────────────────────────── */
+let dragSrcIdx = null;
+
+function initDrag(){
+  const rows = [...listEl.querySelectorAll('.ex.editing')];
+  rows.forEach(row=>{
+    const idx = parseInt(row.dataset.idx);
+
+    /* desktop drag events */
+    row.addEventListener('dragstart', e=>{
+      dragSrcIdx=idx;
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+    });
+    row.addEventListener('dragend', ()=>{
+      row.classList.remove('dragging');
+      listEl.querySelectorAll('.ex.editing').forEach(r=>r.classList.remove('drag-over'));
+    });
+    row.addEventListener('dragover', e=>{
+      e.preventDefault(); e.dataTransfer.dropEffect='move';
+      listEl.querySelectorAll('.ex.editing').forEach(r=>r.classList.remove('drag-over'));
+      row.classList.add('drag-over');
+    });
+    row.addEventListener('drop', e=>{
+      e.preventDefault();
+      if(dragSrcIdx===null||dragSrcIdx===idx) return;
+      reorderAndSave(dragSrcIdx, idx);
+    });
+
+    /* touch drag — iOS */
+    let touchStartY=0, touchClone=null;
+    const handle=row.querySelector('.drag-handle');
+
+    handle.addEventListener('touchstart', e=>{
+      e.preventDefault();
+      dragSrcIdx=idx;
+      touchStartY=e.touches[0].clientY;
+      row.classList.add('dragging');
+      // ghost clone
+      touchClone=row.cloneNode(true);
+      touchClone.style.cssText=`position:fixed;left:${row.getBoundingClientRect().left}px;width:${row.offsetWidth}px;opacity:.85;pointer-events:none;z-index:999;top:${row.getBoundingClientRect().top}px;border-color:var(--ember)`;
+      document.body.appendChild(touchClone);
+    },{passive:false});
+
+    handle.addEventListener('touchmove', e=>{
+      e.preventDefault();
+      const dy=e.touches[0].clientY-touchStartY;
+      if(touchClone) touchClone.style.transform=`translateY(${dy}px)`;
+      // highlight the row we're hovering over
+      listEl.querySelectorAll('.ex.editing').forEach(r=>r.classList.remove('drag-over'));
+      const el=document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+      const target=el?.closest('.ex.editing');
+      if(target&&target!==row) target.classList.add('drag-over');
+    },{passive:false});
+
+    handle.addEventListener('touchend', e=>{
+      e.preventDefault();
+      if(touchClone){ document.body.removeChild(touchClone); touchClone=null; }
+      row.classList.remove('dragging');
+      const el=document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+      const target=el?.closest('.ex.editing');
+      listEl.querySelectorAll('.ex.editing').forEach(r=>r.classList.remove('drag-over'));
+      if(target&&target!==row){
+        const destIdx=parseInt(target.dataset.idx);
+        reorderAndSave(dragSrcIdx, destIdx);
+      }
+      dragSrcIdx=null;
+    },{passive:false});
+  });
+}
+
+async function reorderAndSave(fromIdx, toIdx){
+  const d=DAYS[dayIdx];
+  const [moved]=d.exercises.splice(fromIdx,1);
+  d.exercises.splice(toIdx,0,moved);
+  setSyncDot('busy');
+  renderList(); // re-render immediately so it feels instant
+  try{
+    await dbSaveDay(d.id, d.exercises);
+    setSyncDot('ok'); toast('Order saved ✓');
+  }catch(e){ setSyncDot('err'); toast('Save failed: '+e.message); }
 }
 
 /* ── EDIT MODE ──────────────────────────────────────────────────── */
@@ -616,7 +752,23 @@ async function boot(){
 
 boot();
 
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    // When a new SW is waiting (i.e. you just deployed), show a refresh prompt
+    reg.addEventListener('updatefound',()=>{
+      const newSW=reg.installing;
+      newSW.addEventListener('statechange',()=>{
+        if(newSW.state==='installed' && navigator.serviceWorker.controller){
+          // New version ready — ask user to reload
+          const bar=document.createElement('div');
+          bar.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#1e252f;border-top:1px solid var(--ember);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:200;font-family:"Barlow Condensed";font-size:14px;letter-spacing:.08em';
+          bar.innerHTML='<span style="color:var(--bone)">New version available</span><button onclick="window.location.reload()" style="background:var(--ember);color:#0e1013;border:none;border-radius:999px;padding:8px 18px;font-family:\'Barlow Condensed\';font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer">Reload</button>';
+          document.body.appendChild(bar);
+        }
+      });
+    });
+  }).catch(()=>{});
+}
 let lastTouch=0;
 document.addEventListener('touchend',e=>{
   const now=Date.now(); if(now-lastTouch<350) e.preventDefault(); lastTouch=now;
